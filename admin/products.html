@@ -648,11 +648,9 @@
     }
 
     // 9. تهيئة الصفحة
-document.addEventListener('DOMContentLoaded', function() {
-    loadProducts();
-    loadCategories();
-    addImageLibraryButton();
-});
+    document.addEventListener('DOMContentLoaded', function() {
+        loadProducts();
+        loadCategories();
         
         // إغلاق المودال عند النقر خارج المحتوى
         window.onclick = function(event) {
@@ -661,80 +659,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
     });
-        // أضف زر لاختيار صورة من مكتبة
-function addImageLibraryButton() {
-    const imageInput = document.getElementById('product-image');
-    const container = imageInput.parentElement;
-    
-    const libraryBtn = document.createElement('button');
-    libraryBtn.type = 'button';
-    libraryBtn.className = 'btn btn-secondary';
-    libraryBtn.style.marginTop = '10px';
-    libraryBtn.innerHTML = '<i class="fas fa-images"></i> اختيار من المكتبة';
-    libraryBtn.onclick = openImageLibrary;
-    
-    container.appendChild(libraryBtn);
-}
-
-// مكتبة الصور الافتراضية
-function openImageLibrary() {
-    const images = [
-        // إلكترونيات
-        { url: 'https://via.placeholder.com/400x300/3498db/ffffff?text=Smartphone', category: 'إلكترونيات' },
-        { url: 'https://via.placeholder.com/400x300/2ecc71/ffffff?text=Laptop', category: 'إلكترونيات' },
-        { url: 'https://via.placeholder.com/400x300/9b59b6/ffffff?text=Tablet', category: 'إلكترونيات' },
-        
-        // ملابس
-        { url: 'https://via.placeholder.com/400x300/e74c3c/ffffff?text=T-Shirt', category: 'ملابس' },
-        { url: 'https://via.placeholder.com/400x300/3498db/ffffff?text=Jeans', category: 'ملابس' },
-        { url: 'https://via.placeholder.com/400x300/2ecc71/ffffff?text=Jacket', category: 'ملابس' },
-        
-        // أدوات منزلية
-        { url: 'https://via.placeholder.com/400x300/f39c12/ffffff?text=Home+Tool', category: 'أدوات منزلية' },
-        { url: 'https://via.placeholder.com/400x300/16a085/ffffff?text=Kitchen', category: 'أدوات منزلية' }
-    ];
-    
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-        position: fixed;
-        top: 0; right: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.8);
-        z-index: 10000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    `;
-    
-    modal.innerHTML = `
-        <div style="background: white; padding: 30px; border-radius: 10px; max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="margin: 0;">مكتبة الصور</h3>
-                <button onclick="this.parentElement.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
-                ${images.map(img => `
-                    <div style="cursor: pointer; border: 2px solid #ddd; border-radius: 5px; overflow: hidden;" 
-                         onclick="selectImage('${img.url}')">
-                        <img src="${img.url}" style="width: 100%; height: 100px; object-fit: cover;">
-                        <div style="padding: 10px; text-align: center; font-size: 12px;">${img.category}</div>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-}
-
-function selectImage(url) {
-    document.getElementById('product-image').value = url;
-    document.querySelector('[style*="position: fixed; top: 0"]').remove();
-}
     </script>
 </body>
-
 </html>
-
-
