@@ -124,6 +124,11 @@
             color: white;
         }
         
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        
         /* جدول المنتجات */
         .table-container {
             background: white;
@@ -283,6 +288,23 @@
             font-size: 20px;
         }
         
+        /* معاينة الصورة */
+        .image-preview {
+            text-align: center;
+            margin: 15px 0;
+            padding: 15px;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
         /* التجاوب */
         @media (max-width: 768px) {
             .sidebar {
@@ -427,11 +449,28 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="product-image">رابط الصورة</label>
-                    <input type="url" id="product-image" class="form-control" 
-                           placeholder="https://example.com/image.jpg">
+                    <label>صورة المنتج</label>
+                    
+                    <!-- زر رفع الصورة -->
+                    <button type="button" class="btn btn-info" onclick="uploadProductImage()" 
+                            style="width: 100%; margin-bottom: 10px;">
+                        <i class="fas fa-upload"></i> رفع صورة من الجهاز
+                    </button>
+                    
+                    <!-- معاينة الصورة -->
+                    <div id="image-preview" class="image-preview">
+                        <div style="color: #666; padding: 20px;">
+                            <i class="fas fa-image" style="font-size: 48px; margin-bottom: 10px; display: block; color: #ddd;"></i>
+                            ستظهر معاينة الصورة هنا
+                        </div>
+                    </div>
+                    
+                    <!-- أو رابط يدوي -->
+                    <input type="url" id="product-image-url" class="form-control" 
+                           placeholder="أو أدخل رابط الصورة هنا (اختياري)" 
+                           style="margin-top: 10px;">
                     <small style="color: #666; margin-top: 5px; display: block;">
-                        يمكنك استخدام: https://via.placeholder.com/400x300?text=Product
+                        يمكنك رفع صورة من جهازك (حتى 2MB) أو إدخال رابط صورة خارجية
                     </small>
                 </div>
                 
@@ -454,271 +493,333 @@
 
     <script src="../js/database.js"></script>
     <script>
-        // متغير لحفظ الصورة المرفوعة
-let uploadedProductImage = null;
+        // متغيرات النظام
+        let uploadedProductImage = null; // تخزين الصورة المرفوعة
+        let editingProductId = null; // معرف المنتج الذي يتم تعديله
+        
+        // 1. التحقق من تسجيل الدخول
+        (function checkAuth() {
+            const user = SmartStoreDB.getCurrentUser();
+            
+            if (!user || user.role !== 'admin') {
+                alert('يجب تسجيل الدخول أولاً');
+                window.location.href = 'login.html';
+                return;
+            }
+        })();
 
-// دالة رفع صورة
-function uploadProductImage() {
-    ImageManager.selectImage(function(imageUrl) {
-        uploadedProductImage = imageUrl;
-        
-        // عرض معاينة الصورة
-        const imageData = ImageManager.getLocalImage(imageUrl.replace('local://', ''));
-        const preview = document.getElementById('image-preview');
-        
-        if (preview) {
-            preview.innerHTML = `
-                <div style="text-align: center;">
-                    <img src="${imageData}" 
-                         style="max-width: 100%; max-height: 200px; border-radius: 10px; margin-bottom: 10px;">
-                    <div style="color: #27ae60; font-size: 14px;">
-                        <i class="fas fa-check-circle"></i> تم رفع الصورة بنجاح
-                    </div>
+        // 2. تحميل المنتجات
+        function loadProducts() {
+            const products = SmartStoreDB.get('products');
+            const categories = SmartStoreDB.get('categories');
+            const tbody = document.getElementById('products-table');
+            
+            if (products.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #666;">
+                            <i class="fas fa-box-open" style="font-size: 48px; margin-bottom: 15px; display: block; color: #ddd;"></i>
+                            لا توجد منتجات
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = products.map(product => {
+                const category = categories.find(c => c.id === product.categoryId);
+                let stockClass = 'stock-high';
+                let stockText = 'كثير';
+                
+                if (product.stock <= 3) {
+                    stockClass = 'stock-out';
+                    stockText = 'نفذ';
+                } else if (product.stock <= 10) {
+                    stockClass = 'stock-low';
+                    stockText = 'قليل';
+                }
+                
+                return `
+                    <tr>
+                        <td>
+                            <img src="${product.image || 'https://via.placeholder.com/60'}" 
+                                 class="product-image" alt="${product.name}">
+                        </td>
+                        <td>
+                            <strong>${product.name}</strong><br>
+                            <small style="color: #999;">${product.description || 'لا يوجد وصف'}</small>
+                        </td>
+                        <td>${category?.name || 'عام'}</td>
+                        <td><strong>${product.price.toLocaleString('ar-EG')}</strong> ج.م</td>
+                        <td>
+                            <span class="stock-badge ${stockClass}">${stockText} (${product.stock})</span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary" onclick="editProduct(${product.id})" style="padding: 8px 15px;">
+                                    <i class="fas fa-edit"></i> تعديل
+                                </button>
+                                <button class="btn btn-danger" onclick="deleteProduct(${product.id})" style="padding: 8px 15px;">
+                                    <i class="fas fa-trash"></i> حذف
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // 3. تحميل الفئات في القائمة المنسدلة
+        function loadCategories() {
+            const categories = SmartStoreDB.get('categories');
+            const select = document.getElementById('product-category');
+            
+            select.innerHTML = '<option value="">اختر الفئة</option>' +
+                categories.map(category => `
+                    <option value="${category.id}">${category.name}</option>
+                `).join('');
+        }
+
+        // 4. فتح مودال المنتج
+        function openProductModal() {
+            editingProductId = null;
+            document.getElementById('modal-title').textContent = 'إضافة منتج جديد';
+            document.getElementById('product-form').reset();
+            document.getElementById('product-id').value = '';
+            document.getElementById('image-preview').innerHTML = `
+                <div style="color: #666; padding: 20px;">
+                    <i class="fas fa-image" style="font-size: 48px; margin-bottom: 10px; display: block; color: #ddd;"></i>
+                    ستظهر معاينة الصورة هنا
                 </div>
             `;
+            document.getElementById('product-modal').style.display = 'flex';
+            uploadedProductImage = null;
         }
-        
-        // تعبئة حقل رابط الصورة
-        document.getElementById('product-image').value = 'تم رفع صورة محلية';
-    });
-}
 
-// دالة حفظ المنتج المعدلة
-function saveProduct(event) {
-    event.preventDefault();
-    
-    const productData = {
-        name: document.getElementById('product-name').value.trim(),
-        categoryId: parseInt(document.getElementById('product-category').value),
-        price: parseFloat(document.getElementById('product-price').value),
-        stock: parseInt(document.getElementById('product-stock').value),
-        description: document.getElementById('product-description').value.trim()
-    };
-    
-    // إضافة الصورة
-    if (uploadedProductImage) {
-        productData.image = uploadedProductImage;
-    } else {
-        const imageInput = document.getElementById('product-image').value.trim();
-        if (imageInput && imageInput !== 'تم رفع صورة محلية') {
-            productData.image = imageInput;
-        } else {
-            // استخدام صورة افتراضية
-            const category = document.getElementById('product-category').options[
-                document.getElementById('product-category').selectedIndex
-            ].text;
-            
-            productData.image = ImageManager.getDefaultImage(category, productData.name);
+        function closeProductModal() {
+            document.getElementById('product-modal').style.display = 'none';
         }
-    }
-    
-    // بقية الكود...
-}
-    // 1. التحقق من تسجيل الدخول
-    (function checkAuth() {
-        const user = SmartStoreDB.getCurrentUser();
-        
-        if (!user || user.role !== 'admin') {
-            alert('يجب تسجيل الدخول أولاً');
-            window.location.href = 'login.html';
-            return;
-        }
-    })();
 
-    // 2. تحميل المنتجات
-    function loadProducts() {
-        const products = SmartStoreDB.get('products');
-        const categories = SmartStoreDB.get('categories');
-        const tbody = document.getElementById('products-table');
-        
-        if (products.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="6" style="text-align: center; padding: 40px; color: #666;">
-                        <i class="fas fa-box-open" style="font-size: 48px; margin-bottom: 15px; display: block; color: #ddd;"></i>
-                        لا توجد منتجات
-                    </td>
-                </tr>
-            `;
-            return;
-        }
-        
-        tbody.innerHTML = products.map(product => {
-            const category = categories.find(c => c.id === product.categoryId);
-            let stockClass = 'stock-high';
-            let stockText = 'كثير';
+        // 5. رفع صورة من الجهاز
+        function uploadProductImage() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.style.display = 'none';
             
-            if (product.stock <= 3) {
-                stockClass = 'stock-out';
-                stockText = 'نفذ';
-            } else if (product.stock <= 10) {
-                stockClass = 'stock-low';
-                stockText = 'قليل';
-            }
-            
-            return `
-                <tr>
-                    <td>
-                        <img src="${product.image || 'https://via.placeholder.com/60'}" 
-                             class="product-image" alt="${product.name}">
-                    </td>
-                    <td>
-                        <strong>${product.name}</strong><br>
-                        <small style="color: #999;">${product.description || 'لا يوجد وصف'}</small>
-                    </td>
-                    <td>${category?.name || 'عام'}</td>
-                    <td><strong>${product.price.toLocaleString('ar-EG')}</strong> ج.م</td>
-                    <td>
-                        <span class="stock-badge ${stockClass}">${stockText} (${product.stock})</span>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary" onclick="editProduct(${product.id})" style="padding: 8px 15px;">
-                                <i class="fas fa-edit"></i> تعديل
-                            </button>
-                            <button class="btn btn-danger" onclick="deleteProduct(${product.id})" style="padding: 8px 15px;">
-                                <i class="fas fa-trash"></i> حذف
-                            </button>
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                // التحقق من نوع الملف
+                if (!file.type.startsWith('image/')) {
+                    showAlert('الملف المختار ليس صورة', 'error');
+                    return;
+                }
+                
+                // التحقق من حجم الصورة (2MB كحد أقصى)
+                if (file.size > 2 * 1024 * 1024) {
+                    showAlert('حجم الصورة كبير جداً (الحد الأقصى 2MB)', 'error');
+                    return;
+                }
+                
+                // عرض معاينة الصورة
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedProductImage = e.target.result; // Base64
+                    
+                    // عرض المعاينة
+                    document.getElementById('image-preview').innerHTML = `
+                        <img src="${e.target.result}" 
+                             style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 10px;">
+                        <div style="color: #27ae60; font-size: 14px;">
+                            <i class="fas fa-check-circle"></i> تم تحميل الصورة
                         </div>
-                    </td>
-                </tr>
-            `;
-        }).join('');
-    }
-
-    // 3. تحميل الفئات في القائمة المنسدلة
-    function loadCategories() {
-        const categories = SmartStoreDB.get('categories');
-        const select = document.getElementById('product-category');
-        
-        select.innerHTML = '<option value="">اختر الفئة</option>' +
-            categories.map(category => `
-                <option value="${category.id}">${category.name}</option>
-            `).join('');
-    }
-
-    // 4. فتح مودال المنتج
-    let editingProductId = null;
-
-    function openProductModal() {
-        editingProductId = null;
-        document.getElementById('modal-title').textContent = 'إضافة منتج جديد';
-        document.getElementById('product-form').reset();
-        document.getElementById('product-id').value = '';
-        document.getElementById('product-modal').style.display = 'flex';
-    }
-
-    function closeProductModal() {
-        document.getElementById('product-modal').style.display = 'none';
-    }
-
-    // 5. تعديل منتج
-    function editProduct(productId) {
-        const products = SmartStoreDB.get('products');
-        const product = products.find(p => p.id == productId);
-        
-        if (!product) return;
-        
-        editingProductId = productId;
-        
-        document.getElementById('modal-title').textContent = 'تعديل المنتج';
-        document.getElementById('product-id').value = productId;
-        document.getElementById('product-name').value = product.name;
-        document.getElementById('product-category').value = product.categoryId;
-        document.getElementById('product-price').value = product.price;
-        document.getElementById('product-stock').value = product.stock;
-        document.getElementById('product-image').value = product.image || '';
-        document.getElementById('product-description').value = product.description || '';
-        
-        document.getElementById('product-modal').style.display = 'flex';
-    }
-
-    // 6. حفظ المنتج
-    function saveProduct(event) {
-        event.preventDefault();
-        
-        const productData = {
-            name: document.getElementById('product-name').value.trim(),
-            categoryId: parseInt(document.getElementById('product-category').value),
-            price: parseFloat(document.getElementById('product-price').value),
-            stock: parseInt(document.getElementById('product-stock').value),
-            image: productImage || document.getElementById('product-image').value.trim(),
-            description: document.getElementById('product-description').value.trim()
-        };
-        
-        let success = false;
-        let message = '';
-        
-        if (editingProductId) {
-            // تعديل
-            success = SmartStoreDB.update('products', editingProductId, productData);
-            message = success ? 'تم تحديث المنتج بنجاح' : 'خطأ في تحديث المنتج';
-        } else {
-            // إضافة
-            const newProduct = SmartStoreDB.add('products', productData);
-            success = !!newProduct;
-            message = success ? 'تم إضافة المنتج بنجاح' : 'خطأ في إضافة المنتج';
+                        <div style="color: #666; font-size: 12px; margin-top: 5px;">
+                            ${file.name} (${Math.round(file.size / 1024)} كيلوبايت)
+                        </div>
+                    `;
+                    
+                    // إخفاء حقل الرابط اليدوي
+                    document.getElementById('product-image-url').value = 'تم رفع صورة محلية';
+                };
+                
+                reader.readAsDataURL(file);
+            };
+            
+            document.body.appendChild(input);
+            input.click();
+            document.body.removeChild(input);
         }
-        
-        if (success) {
-            showAlert(message, 'success');
-            loadProducts();
-            closeProductModal();
-        } else {
-            showAlert(message, 'error');
-        }
-    }
 
-    // 7. حذف منتج
-    function deleteProduct(productId) {
-        if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
-            return;
-        }
-        
-        const success = SmartStoreDB.delete('products', productId);
-        
-        if (success) {
-            showAlert('تم حذف المنتج بنجاح', 'success');
-            loadProducts();
-        } else {
-            showAlert('خطأ في حذف المنتج', 'error');
-        }
-    }
-
-    // 8. عرض التنبيهات
-    function showAlert(message, type = 'success') {
-        const container = document.getElementById('alert-container');
-        const alert = document.createElement('div');
-        alert.className = `alert alert-${type}`;
-        alert.innerHTML = `
-            <div>
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-                ${message}
-            </div>
-            <button class="close-alert" onclick="this.parentElement.remove()">×</button>
-        `;
-        
-        container.appendChild(alert);
-        
-        setTimeout(() => {
-            if (alert.parentElement) {
-                alert.remove();
+        // 6. تعديل منتج
+        function editProduct(productId) {
+            const products = SmartStoreDB.get('products');
+            const product = products.find(p => p.id == productId);
+            
+            if (!product) return;
+            
+            editingProductId = productId;
+            
+            document.getElementById('modal-title').textContent = 'تعديل المنتج';
+            document.getElementById('product-id').value = productId;
+            document.getElementById('product-name').value = product.name;
+            document.getElementById('product-category').value = product.categoryId;
+            document.getElementById('product-price').value = product.price;
+            document.getElementById('product-stock').value = product.stock;
+            document.getElementById('product-description').value = product.description || '';
+            
+            // التعامل مع الصورة
+            uploadedProductImage = null;
+            
+            if (product.image) {
+                if (product.image.startsWith('data:image') || product.image.startsWith('local://')) {
+                    // إذا كانت الصورة Base64 أو محلية
+                    let imageUrl = product.image;
+                    
+                    // إذا كانت صورة محلية، نحاول جلبها
+                    if (product.image.startsWith('local://')) {
+                        // نستخدم ImageManager إذا كان متاحاً
+                        if (typeof ImageManager !== 'undefined') {
+                            imageUrl = ImageManager.getLocalImage(product.image.replace('local://', '')) || product.image;
+                        }
+                    }
+                    
+                    document.getElementById('image-preview').innerHTML = `
+                        <img src="${imageUrl}" 
+                             style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 10px;">
+                        <div style="color: #666; font-size: 14px;">
+                            <i class="fas fa-image"></i> صورة محفوظة
+                        </div>
+                    `;
+                    document.getElementById('product-image-url').value = '';
+                } else {
+                    // إذا كانت رابط خارجي
+                    document.getElementById('image-preview').innerHTML = `
+                        <img src="${product.image}" 
+                             style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 10px;">
+                        <div style="color: #666; font-size: 14px;">
+                            <i class="fas fa-external-link-alt"></i> رابط خارجي
+                        </div>
+                    `;
+                    document.getElementById('product-image-url').value = product.image;
+                }
+            } else {
+                document.getElementById('image-preview').innerHTML = `
+                    <div style="color: #666; padding: 20px;">
+                        <i class="fas fa-image" style="font-size: 48px; margin-bottom: 10px; display: block; color: #ddd;"></i>
+                        لا توجد صورة
+                    </div>
+                `;
+                document.getElementById('product-image-url').value = '';
             }
-        }, 5000);
-    }
+            
+            document.getElementById('product-modal').style.display = 'flex';
+        }
 
-    // 9. تهيئة الصفحة
-    document.addEventListener('DOMContentLoaded', function() {
-        loadProducts();
-        loadCategories();
-        
-        // إغلاق المودال عند النقر خارج المحتوى
-        window.onclick = function(event) {
-            if (event.target.id === 'product-modal') {
+        // 7. حفظ المنتج
+        function saveProduct(event) {
+            event.preventDefault();
+            
+            const productData = {
+                name: document.getElementById('product-name').value.trim(),
+                categoryId: parseInt(document.getElementById('product-category').value),
+                price: parseFloat(document.getElementById('product-price').value),
+                stock: parseInt(document.getElementById('product-stock').value),
+                description: document.getElementById('product-description').value.trim()
+            };
+            
+            // التعامل مع الصورة
+            if (uploadedProductImage) {
+                // استخدام الصورة المرفوعة
+                productData.image = uploadedProductImage;
+            } else {
+                const imageUrl = document.getElementById('product-image-url').value.trim();
+                if (imageUrl && imageUrl !== 'تم رفع صورة محلية') {
+                    // استخدام الرابط اليدوي
+                    productData.image = imageUrl;
+                } else if (!editingProductId) {
+                    // للمنتجات الجديدة فقط: استخدام صورة افتراضية
+                    const categorySelect = document.getElementById('product-category');
+                    const category = categorySelect.options[categorySelect.selectedIndex].text;
+                    productData.image = SmartStoreDB.getDefaultImage(category, productData.name);
+                }
+                // للمنتجات المعدلة، نترك الصورة كما هي إذا لم يتم تغييرها
+            }
+            
+            let success = false;
+            let message = '';
+            
+            if (editingProductId) {
+                // تعديل
+                success = SmartStoreDB.update('products', editingProductId, productData);
+                message = success ? 'تم تحديث المنتج بنجاح' : 'خطأ في تحديث المنتج';
+            } else {
+                // إضافة
+                const newProduct = SmartStoreDB.add('products', productData);
+                success = !!newProduct;
+                message = success ? 'تم إضافة المنتج بنجاح' : 'خطأ في إضافة المنتج';
+            }
+            
+            if (success) {
+                showAlert(message, 'success');
+                loadProducts();
                 closeProductModal();
+            } else {
+                showAlert(message, 'error');
             }
-        };
-    });
+        }
+
+        // 8. حذف منتج
+        function deleteProduct(productId) {
+            if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                return;
+            }
+            
+            const success = SmartStoreDB.delete('products', productId);
+            
+            if (success) {
+                showAlert('تم حذف المنتج بنجاح', 'success');
+                loadProducts();
+            } else {
+                showAlert('خطأ في حذف المنتج', 'error');
+            }
+        }
+
+        // 9. عرض التنبيهات
+        function showAlert(message, type = 'success') {
+            const container = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = `
+                <div>
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    ${message}
+                </div>
+                <button class="close-alert" onclick="this.parentElement.remove()">×</button>
+            `;
+            
+            container.appendChild(alert);
+            
+            setTimeout(() => {
+                if (alert.parentElement) {
+                    alert.remove();
+                }
+            }, 5000);
+        }
+
+        // 10. تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            loadCategories();
+            
+            // إغلاق المودال عند النقر خارج المحتوى
+            window.onclick = function(event) {
+                if (event.target.id === 'product-modal') {
+                    closeProductModal();
+                }
+            };
+        });
     </script>
 </body>
 </html>
