@@ -426,26 +426,14 @@
                     </div>
                 </div>
                 
-               <div class="form-group">
-    <label for="product-image">صورة المنتج</label>
-    
-    <!-- زر رفع الصورة -->
-    <button type="button" class="btn" onclick="uploadProductImage()" 
-            style="width: 100%; margin-bottom: 10px; background: #17a2b8;">
-        <i class="fas fa-upload"></i> رفع صورة من الجهاز
-    </button>
-    
-    <!-- معاينة الصورة -->
-    <div id="image-preview" style="margin: 15px 0; text-align: center;"></div>
-    
-    <!-- أو رابط يدوي -->
-    <input type="url" id="product-image" class="form-control" 
-           placeholder="أو أدخل رابط الصورة هنا (اختياري)" 
-           style="margin-top: 10px;">
-    <small style="color: #666; margin-top: 5px; display: block;">
-        يمكنك رفع صورة أو استخدام رابط خارجي
-    </small>
-</div>
+                <div class="form-group">
+                    <label for="product-image">رابط الصورة</label>
+                    <input type="url" id="product-image" class="form-control" 
+                           placeholder="https://example.com/image.jpg">
+                    <small style="color: #666; margin-top: 5px; display: block;">
+                        يمكنك استخدام: https://via.placeholder.com/400x300?text=Product
+                    </small>
+                </div>
                 
                 <div class="form-group">
                     <label for="product-description">وصف المنتج</label>
@@ -466,6 +454,66 @@
 
     <script src="../js/database.js"></script>
     <script>
+        // متغير لحفظ الصورة المرفوعة
+let uploadedProductImage = null;
+
+// دالة رفع صورة
+function uploadProductImage() {
+    ImageManager.selectImage(function(imageUrl) {
+        uploadedProductImage = imageUrl;
+        
+        // عرض معاينة الصورة
+        const imageData = ImageManager.getLocalImage(imageUrl.replace('local://', ''));
+        const preview = document.getElementById('image-preview');
+        
+        if (preview) {
+            preview.innerHTML = `
+                <div style="text-align: center;">
+                    <img src="${imageData}" 
+                         style="max-width: 100%; max-height: 200px; border-radius: 10px; margin-bottom: 10px;">
+                    <div style="color: #27ae60; font-size: 14px;">
+                        <i class="fas fa-check-circle"></i> تم رفع الصورة بنجاح
+                    </div>
+                </div>
+            `;
+        }
+        
+        // تعبئة حقل رابط الصورة
+        document.getElementById('product-image').value = 'تم رفع صورة محلية';
+    });
+}
+
+// دالة حفظ المنتج المعدلة
+function saveProduct(event) {
+    event.preventDefault();
+    
+    const productData = {
+        name: document.getElementById('product-name').value.trim(),
+        categoryId: parseInt(document.getElementById('product-category').value),
+        price: parseFloat(document.getElementById('product-price').value),
+        stock: parseInt(document.getElementById('product-stock').value),
+        description: document.getElementById('product-description').value.trim()
+    };
+    
+    // إضافة الصورة
+    if (uploadedProductImage) {
+        productData.image = uploadedProductImage;
+    } else {
+        const imageInput = document.getElementById('product-image').value.trim();
+        if (imageInput && imageInput !== 'تم رفع صورة محلية') {
+            productData.image = imageInput;
+        } else {
+            // استخدام صورة افتراضية
+            const category = document.getElementById('product-category').options[
+                document.getElementById('product-category').selectedIndex
+            ].text;
+            
+            productData.image = ImageManager.getDefaultImage(category, productData.name);
+        }
+    }
+    
+    // بقية الكود...
+}
     // 1. التحقق من تسجيل الدخول
     (function checkAuth() {
         const user = SmartStoreDB.getCurrentUser();
@@ -580,25 +628,6 @@
         document.getElementById('product-price').value = product.price;
         document.getElementById('product-stock').value = product.stock;
         document.getElementById('product-image').value = product.image || '';
-        // تنظيف معاينة الصورة عند التعديل
-document.getElementById('image-preview').innerHTML = '';
-uploadedProductImage = null;
-
-// إذا كانت الصورة محلية، أظهر معاينة
-if (product.image && product.image.startsWith('local://')) {
-    const imageData = ImageManager.getLocalImage(product.image.replace('local://', ''));
-    if (imageData) {
-        document.getElementById('image-preview').innerHTML = `
-            <div style="text-align: center;">
-                <img src="${imageData}" 
-                     style="max-width: 100%; max-height: 200px; border-radius: 10px; margin-bottom: 10px;">
-                <div style="color: #666; font-size: 14px;">
-                    <i class="fas fa-image"></i> صورة محفوظة
-                </div>
-            </div>
-        `;
-    }
-}
         document.getElementById('product-description').value = product.description || '';
         
         document.getElementById('product-modal').style.display = 'flex';
@@ -613,21 +642,7 @@ if (product.image && product.image.startsWith('local://')) {
             categoryId: parseInt(document.getElementById('product-category').value),
             price: parseFloat(document.getElementById('product-price').value),
             stock: parseInt(document.getElementById('product-stock').value),
-            // إضافة الصورة
-if (uploadedProductImage) {
-    productData.image = uploadedProductImage;
-    uploadedProductImage = null; // تنظيف المتغير
-} else {
-    const imageInput = document.getElementById('product-image').value.trim();
-    if (imageInput && imageInput !== '') {
-        productData.image = imageInput;
-    } else {
-        // استخدام صورة افتراضية
-        const categorySelect = document.getElementById('product-category');
-        const category = categorySelect.options[categorySelect.selectedIndex].text;
-        productData.image = SmartStoreDB.getDefaultImage(category, productData.name);
-    }
-}
+            image: productImage || document.getElementById('product-image').value.trim(),
             description: document.getElementById('product-description').value.trim()
         };
         
@@ -704,19 +719,6 @@ if (uploadedProductImage) {
             }
         };
     });
-        <script src="../js/image-manager.js"></script>
-<script>
-    // تحميل الصور القديمة عند فتح صفحة التعديل
-    function editProduct(productId) {
-        // ... كود التعديل الحالي
-        
-        // تنظيف المتغير
-        uploadedProductImage = null;
-        
-        // ... باقي الكود
-    }
     </script>
 </body>
 </html>
-
-
