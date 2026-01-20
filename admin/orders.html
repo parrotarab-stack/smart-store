@@ -627,64 +627,66 @@ tbody.innerHTML = orders.map(order => {
         }
     }
 
-    // 8. عرض التنبيهات
-    function showAlert(message, type = 'success') {
-        const container = document.getElementById('alert-container');
-        const alert = document.createElement('div');
-        alert.className = `alert alert-${type}`;
-        alert.innerHTML = `
-            <div>
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-                ${message}
-            </div>
-            <button onclick="this.parentElement.remove()" style="background: none; border: none; cursor: pointer; font-size: 20px;">×</button>
-        `;
-        
-        container.appendChild(alert);
-        
-        setTimeout(() => {
-            if (alert.parentElement) {
-                alert.remove();
+            // 8. عرض التنبيهات
+            function showAlert(message, type = 'success') {
+                const container = document.getElementById('alert-container');
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.innerHTML = `
+                    <div>
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                        ${message}
+                    </div>
+                    <button onclick="this.parentElement.remove()" style="background: none; border: none; cursor: pointer; font-size: 20px;">×</button>
+                `;
+                
+                container.appendChild(alert);
+                
+                setTimeout(() => {
+                    if (alert.parentElement) {
+                        alert.remove();
+                    }
+                }, 5000);
             }
-        }, 5000);
-    }
 
-    // 9. تهيئة الصفحة
-    document.addEventListener('DOMContentLoaded', function() {
-        loadOrders();
-        
-        // إغلاق المودال عند النقر خارج المحتوى
-        window.onclick = function(event) {
-            if (event.target.id === 'status-modal') {
-                closeStatusModal();
+            // 9. دالة حذف الطلب
+            function deleteOrder(orderId) {
+                // تأكيد من المستخدم
+                if (!confirm('⚠️ هل أنت متأكد من حذف هذا الطلب؟\n\nملاحظة: الأفضل تغيير الحالة إلى "ملغى" بدلاً من الحذف.')) {
+                    return;
+                }
+                
+                // جلب الطلب لمعرفة رقمه
+                const orders = SmartStoreDB.get('orders');
+                const order = orders.find(o => o.id == orderId);
+                
+                if (!order) {
+                    showAlert('الطلب غير موجود', 'error');
+                    return;
+                }
+                
+                // حذف الطلب
+                const success = SmartStoreDB.delete('orders', orderId);
+                
+                if (success) {
+                    showAlert(`تم حذف الطلب ${order.orderNumber} بنجاح`, 'success');
+                    loadOrders(); // إعادة تحميل الجدول
+                } else {
+                    showAlert('حدث خطأ في حذف الطلب', 'error');
+                }
             }
-        };
-    });
-    // دالة حذف الطلب
-function deleteOrder(orderId) {
-    // تأكيد من المستخدم
-    if (!confirm('⚠️ هل أنت متأكد من حذف هذا الطلب؟\n\nملاحظة: الأفضل تغيير الحالة إلى "ملغى" بدلاً من الحذف.')) {
-        return;
-    }
-    
-    // جلب الطلب لمعرفة رقمه
-    const orders = SmartStoreDB.get('orders');
-    const order = orders.find(o => o.id == orderId);
-    
-    if (!order) {
-        showAlert('الطلب غير موجود', 'error');
-        return;
-    }
-    
-    // حذف الطلب
-    const success = SmartStoreDB.delete('orders', orderId);
-    
-    if (success) {
-        showAlert(`تم حذف الطلب ${order.orderNumber} بنجاح`, 'success');
-        loadOrders(); // إعادة تحميل الجدول
-    } else {
-        showAlert('حدث خطأ في حذف الطلب', 'error');
-    }
-    </script>
-</body>
+
+            // 10. تهيئة الصفحة
+            document.addEventListener('DOMContentLoaded', function() {
+                loadOrders();
+                
+                // إغلاق المودال عند النقر خارج المحتوى
+                window.onclick = function(event) {
+                    if (event.target.id === 'status-modal') {
+                        closeStatusModal();
+                    }
+                };
+            });
+        </script>
+    </body>
 </html>
