@@ -426,14 +426,26 @@
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="product-image">رابط الصورة</label>
-                    <input type="url" id="product-image" class="form-control" 
-                           placeholder="https://example.com/image.jpg">
-                    <small style="color: #666; margin-top: 5px; display: block;">
-                        يمكنك استخدام: https://via.placeholder.com/400x300?text=Product
-                    </small>
-                </div>
+               <div class="form-group">
+    <label for="product-image">صورة المنتج</label>
+    
+    <!-- زر رفع الصورة -->
+    <button type="button" class="btn" onclick="uploadProductImage()" 
+            style="width: 100%; margin-bottom: 10px; background: #17a2b8;">
+        <i class="fas fa-upload"></i> رفع صورة من الجهاز
+    </button>
+    
+    <!-- معاينة الصورة -->
+    <div id="image-preview" style="margin: 15px 0; text-align: center;"></div>
+    
+    <!-- أو رابط يدوي -->
+    <input type="url" id="product-image" class="form-control" 
+           placeholder="أو أدخل رابط الصورة هنا (اختياري)" 
+           style="margin-top: 10px;">
+    <small style="color: #666; margin-top: 5px; display: block;">
+        يمكنك رفع صورة أو استخدام رابط خارجي
+    </small>
+</div>
                 
                 <div class="form-group">
                     <label for="product-description">وصف المنتج</label>
@@ -662,3 +674,4 @@
     </script>
 </body>
 </html>
+
