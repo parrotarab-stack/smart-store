@@ -144,7 +144,25 @@
         .products-section {
             padding: 50px 0;
         }
-        
+        .product-card {
+    /* الحجم الجديد */
+    width: 100%; /* علشان يملأ العمود */
+    max-width: 260px; /* حدا أقصى أصغر */
+    margin: 0 auto; /* علشان يتركز */
+}
+
+.product-image {
+    height: 160px !important; /* قلل ارتفاع الصورة */
+}
+
+.product-name {
+    font-size: 16px !important; /* خط أصغر */
+    min-height: 45px; /* علشان يتناسب مع السطرين */
+}
+
+.product-price {
+    font-size: 18px !important;
+}
         .section-title {
             text-align: center;
             font-size: 36px;
@@ -154,8 +172,8 @@
         
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
         }
         
         .product-card {
@@ -370,6 +388,58 @@
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
         }
+        .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
+    gap: 20px !important;
+}
+
+.product-card {
+    transition: all 0.3s ease !important;
+    border: 1px solid #eee !important;
+}
+
+.product-card:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+}
+
+.product-image {
+    height: 180px !important;
+}
+
+.product-info {
+    padding: 15px !important;
+}
+
+.product-name {
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+    height: 45px !important;
+    overflow: hidden !important;
+    margin-bottom: 8px !important;
+}
+
+.product-price {
+    font-size: 18px !important;
+    margin-bottom: 12px !important;
+}
+
+.stock {
+    font-size: 13px !important;
+    margin-bottom: 12px !important;
+}
+
+/* للموبايل */
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+    
+    .product-image {
+        height: 140px !important;
+    }
+}
     </style>
 </head>
 <body>
@@ -714,4 +784,5 @@
     };
     </script>
 </body>
+
 </html>
