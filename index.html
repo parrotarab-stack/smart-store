@@ -506,93 +506,17 @@
     <!-- التنبيهات -->
     <div id="alert-container" style="position: fixed; top: 20px; right: 20px; z-index: 1001;"></div>
 
+    <script src="js/database.js"></script>
     <script>
-    // ضمان وجود قاعدة البيانات
-    if (typeof SmartStoreDB === 'undefined') {
-        // إذا لم تكن قاعدة البيانات موجودة، ننشئها
-        console.log('قاعدة البيانات غير موجودة، جاري إنشاء قاعدة بيانات محلية مؤقتة...');
-        
-        // إنشاء كائن قاعدة بيانات محلية
-        const SmartStoreDB = {
-            data: {
-                categories: [],
-                products: [],
-                orders: [],
-                adminUsers: []
-            },
-            
-            init: function() {
-                // محاولة تحميل البيانات من localStorage
-                const savedData = localStorage.getItem('SmartStoreDB');
-                if (savedData) {
-                    this.data = JSON.parse(savedData);
-                } else {
-                    // بيانات أولية
-                    this.data = {
-                        categories: [
-                            { id: 1, name: 'الكترونيات' },
-                            { id: 2, name: 'ملابس' },
-                            { id: 3, name: 'أجهزة منزلية' }
-                        ],
-                        products: [
-                            { id: 1, name: 'سماعات لاسلكية', description: 'سماعات بلوتوث عالية الجودة', price: 599, stock: 10, categoryId: 1, image: 'https://via.placeholder.com/300x200/3498db/ffffff?text=Headphones' },
-                            { id: 2, name: 'هاتف ذكي', description: 'هاتف ذكي بشاشة 6.5 بوصة', price: 4999, stock: 5, categoryId: 1, image: 'https://via.placeholder.com/300x200/2ecc71/ffffff?text=Smartphone' },
-                            { id: 3, name: 'قمة رجالي', description: 'قمة قطنية عالية الجودة', price: 149, stock: 20, categoryId: 2, image: 'https://via.placeholder.com/300x200/e74c3c/ffffff?text=T-Shirt' }
-                        ],
-                        orders: [],
-                        adminUsers: [{ id: 1, username: 'admin', password: '123456', name: 'مدير النظام' }]
-                    };
-                    this.save();
-                }
-                return this;
-            },
-            
-            get: function(table) {
-                return this.data[table] || [];
-            },
-            
-            add: function(table, item) {
-                if (!this.data[table]) this.data[table] = [];
-                item.id = this.data[table].length > 0 ? Math.max(...this.data[table].map(i => i.id)) + 1 : 1;
-                this.data[table].push(item);
-                this.save();
-                return item;
-            },
-            
-            update: function(table, id, updates) {
-                const index = this.data[table].findIndex(item => item.id == id);
-                if (index !== -1) {
-                    this.data[table][index] = { ...this.data[table][index], ...updates };
-                    this.save();
-                    return true;
-                }
-                return false;
-            },
-            
-            delete: function(table, id) {
-                const initialLength = this.data[table].length;
-                this.data[table] = this.data[table].filter(item => item.id != id);
-                if (this.data[table].length < initialLength) {
-                    this.save();
-                    return true;
-                }
-                return false;
-            },
-            
-            save: function() {
-                localStorage.setItem('SmartStoreDB', JSON.stringify(this.data));
-            }
-        }.init();
-        
-        // جعل الكائن متاحاً عالمياً
-        window.SmartStoreDB = SmartStoreDB;
-    }
-    
     // 1. تحميل المنتجات عند فتح الصفحة
     function loadProducts() {
+        // استخدام قاعدة البيانات الأصلية من ملف database.js
         const products = SmartStoreDB.get('products');
         const categories = SmartStoreDB.get('categories');
         const container = document.getElementById('products-container');
+        
+        console.log('المنتجات المحملة:', products); // للتشخيص
+        console.log('الفئات المحملة:', categories); // للتشخيص
         
         if (!products || products.length === 0) {
             container.innerHTML = '<p style="text-align: center; width: 100%; padding: 40px;">لا توجد منتجات حالياً</p>';
@@ -600,7 +524,7 @@
         }
         
         container.innerHTML = products.map(product => {
-            const category = categories.find(c => c.id === product.categoryId);
+            const category = categories ? categories.find(c => c.id === product.categoryId) : null;
             const stockClass = product.stock > 0 ? 'in-stock' : 'out-of-stock';
             const stockText = product.stock > 0 ? `متوفر (${product.stock})` : 'نفذ من المخزون';
             
@@ -610,7 +534,7 @@
                         <img src="${product.image || 'https://via.placeholder.com/300x200/cccccc/666666?text=No+Image'}" alt="${product.name}">
                     </div>
                     <div class="product-info">
-                        <div class="product-category">${category?.name || 'عام'}</div>
+                        <div class="product-category">${category?.name || product.category || 'عام'}</div>
                         <h3 class="product-name">${product.name}</h3>
                         <p>${product.description || ''}</p>
                         <div class="product-price">${product.price ? product.price.toLocaleString('ar-EG') : '0'} ج.م</div>
@@ -780,12 +704,28 @@
         }, 5000);
     }
     
-    // 5. تهيئة الصفحة
+    // 5. تهيئة الصفحة - مع التعامل مع الأخطاء
     document.addEventListener('DOMContentLoaded', function() {
-        // إذا كان هناك ملف database.js منفصل، سيتم استخدامه
-        // وإلا سيتم استخدام النسخة المضمنة أعلاه
-        loadProducts();
-        updateCartCount();
+        try {
+            loadProducts();
+            updateCartCount();
+        } catch (error) {
+            console.error('خطأ في تحميل البيانات:', error);
+            
+            // عرض رسالة خطأ للمستخدم
+            const container = document.getElementById('products-container');
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px; width: 100%;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #e74c3c;"></i>
+                    <p style="margin-top: 20px; font-size: 18px;">حدث خطأ في تحميل المنتجات</p>
+                    <button onclick="location.reload()" class="btn" style="margin-top: 20px;">
+                        <i class="fas fa-redo"></i> إعادة تحميل الصفحة
+                    </button>
+                </div>
+            `;
+            
+            showAlert('حدث خطأ في تحميل المنتجات. حاول إعادة تحميل الصفحة.', 'error');
+        }
     });
     
     // إغلاق المودال عند النقر خارج المحتوى
