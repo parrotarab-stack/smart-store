@@ -19,20 +19,18 @@
             line-height: 1.6;
         }
         
+        /* الهيدر */
         .header {
             background: linear-gradient(135deg, #2c3e50, #3498db);
             color: white;
-            padding: 15px 0;
+            padding: 20px 0;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 15px;
+            padding: 0 20px;
         }
         
         .header-content {
@@ -40,25 +38,24 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 20px;
         }
         
         .logo {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
         }
         
         .logo i {
             color: #ffd700;
-            font-size: 28px;
         }
         
         .nav {
             display: flex;
-            gap: 20px;
+            gap: 30px;
             align-items: center;
         }
         
@@ -67,7 +64,6 @@
             text-decoration: none;
             font-weight: 500;
             transition: 0.3s;
-            font-size: 16px;
         }
         
         .nav a:hover {
@@ -77,7 +73,6 @@
         .cart-icon {
             position: relative;
             font-size: 20px;
-            cursor: pointer;
         }
         
         .cart-count {
@@ -98,103 +93,86 @@
         
         .admin-link {
             background: #27ae60;
-            padding: 6px 15px;
-            border-radius: 20px;
+            padding: 8px 20px;
+            border-radius: 25px;
             font-weight: 600;
-            font-size: 14px;
         }
         
+        /* الهيرو */
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
-                        url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80');
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://via.placeholder.com/1200x400/3498db/ffffff?text=Smart+Store');
             background-size: cover;
             background-position: center;
             color: white;
             text-align: center;
-            padding: 60px 20px;
-            margin-bottom: 40px;
+            padding: 100px 20px;
+            margin-bottom: 50px;
         }
         
         .hero h1 {
-            font-size: 36px;
-            margin-bottom: 15px;
-            line-height: 1.3;
+            font-size: 48px;
+            margin-bottom: 20px;
         }
         
         .hero p {
-            font-size: 18px;
-            max-width: 700px;
-            margin: 0 auto 25px;
-            line-height: 1.6;
+            font-size: 20px;
+            max-width: 800px;
+            margin: 0 auto 30px;
         }
         
         .btn {
             display: inline-block;
             background: #3498db;
             color: white;
-            padding: 10px 25px;
+            padding: 12px 30px;
             border-radius: 5px;
             text-decoration: none;
             font-weight: bold;
             transition: 0.3s;
             border: none;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 16px;
         }
         
         .btn:hover {
             background: #2980b9;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         
+        /* المنتجات */
         .products-section {
-            padding: 40px 0;
+            padding: 50px 0;
         }
         
         .section-title {
             text-align: center;
-            font-size: 28px;
-            margin-bottom: 30px;
+            font-size: 36px;
+            margin-bottom: 40px;
             color: #2c3e50;
-            position: relative;
-            padding-bottom: 15px;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 50%;
-            transform: translateX(50%);
-            width: 100px;
-            height: 3px;
-            background: #3498db;
-            border-radius: 2px;
         }
         
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
         }
         
         .product-card {
             background: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: 0.3s;
-            border: 1px solid #eee;
         }
         
         .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
         
         .product-image {
-            height: 180px;
+            height: 200px;
             overflow: hidden;
         }
         
@@ -202,47 +180,35 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: 0.5s;
-        }
-        
-        .product-card:hover .product-image img {
-            transform: scale(1.05);
         }
         
         .product-info {
-            padding: 15px;
+            padding: 20px;
         }
         
         .product-category {
             color: #3498db;
-            font-size: 13px;
+            font-size: 14px;
             margin-bottom: 5px;
-            font-weight: 600;
         }
         
         .product-name {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #2c3e50;
-            line-height: 1.4;
-            height: 45px;
-            overflow: hidden;
         }
         
         .product-price {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             color: #e74c3c;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         
         .stock {
-            font-size: 13px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            font-size: 14px;
+            margin-bottom: 15px;
         }
         
         .stock.in-stock {
@@ -253,51 +219,38 @@
             color: #e74c3c;
         }
         
+        /* الفوتر */
         .footer {
             background: #2c3e50;
             color: white;
-            padding: 40px 0 15px;
+            padding: 50px 0 20px;
             margin-top: 50px;
         }
         
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
         }
         
         .footer-section h3 {
-            font-size: 18px;
-            margin-bottom: 15px;
+            font-size: 20px;
+            margin-bottom: 20px;
             color: #ffd700;
-            padding-bottom: 8px;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
         }
         
         .footer-section p {
             margin-bottom: 10px;
-            font-size: 14px;
-        }
-        
-        .footer-section a {
-            color: white;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        
-        .footer-section a:hover {
-            color: #ffd700;
-            padding-right: 5px;
         }
         
         .footer-bottom {
             text-align: center;
             padding-top: 20px;
             border-top: 1px solid rgba(255,255,255,0.1);
-            font-size: 14px;
         }
         
+        /* المودال */
         .modal {
             display: none;
             position: fixed;
@@ -309,18 +262,16 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
-            padding: 15px;
         }
         
         .modal-content {
             background: white;
-            padding: 25px;
+            padding: 30px;
             border-radius: 10px;
             max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
+            width: 90%;
+            max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
         
         .modal-header {
@@ -328,16 +279,6 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .modal-header h3 {
-            color: #2c3e50;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
         
         .close-modal {
@@ -346,47 +287,27 @@
             font-size: 24px;
             cursor: pointer;
             color: #999;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-        
-        .close-modal:hover {
-            background: #f5f5f5;
-            color: #333;
         }
         
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 14px;
+            font-weight: bold;
         }
         
         .form-control {
             width: 100%;
-            padding: 10px 12px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 15px;
-            transition: 0.3s;
+            font-size: 16px;
         }
         
-        .form-control:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-            outline: none;
-        }
-        
+        /* السلة */
         .cart-items {
             margin-bottom: 20px;
         }
@@ -395,64 +316,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 10px 0;
             border-bottom: 1px solid #eee;
-        }
-        
-        .cart-item:last-child {
-            border-bottom: none;
-        }
-        
-        .cart-item-info {
-            flex: 1;
-        }
-        
-        .cart-item-name {
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-        
-        .cart-item-details {
-            font-size: 13px;
-            color: #666;
-        }
-        
-        .cart-item-price {
-            font-weight: bold;
-            color: #e74c3c;
-            font-size: 16px;
-            margin-right: 15px;
         }
         
         .cart-total {
             text-align: left;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             margin-top: 20px;
-            padding-top: 15px;
-            border-top: 2px solid #eee;
         }
         
+        /* التنبيهات */
         .alert {
-            padding: 12px 15px;
+            padding: 15px;
             border-radius: 5px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: slideIn 0.3s ease;
-        }
-        
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+            margin-bottom: 20px;
         }
         
         .alert-success {
@@ -467,124 +346,28 @@
             border: 1px solid #f5c6cb;
         }
         
-        .loading {
-            text-align: center;
-            padding: 30px;
-            color: #666;
-        }
-        
-        .loading i {
-            font-size: 24px;
-            color: #3498db;
-            margin-bottom: 10px;
-        }
-        
-        .data-message {
-            background: #f8f9fa;
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-            border: 1px solid #eee;
-        }
-        
-        .data-message i {
-            color: #3498db;
-            margin-left: 5px;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            grid-column: 1 / -1;
-        }
-        
-        .empty-state i {
-            font-size: 48px;
-            color: #95a5a6;
-            margin-bottom: 20px;
-        }
-        
-        .sync-button {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: #3498db;
-            color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-        
+        /* التجاوب */
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
                 text-align: center;
-                gap: 10px;
             }
             
             .nav {
-                width: 100%;
-                justify-content: center;
+                flex-direction: column;
                 gap: 15px;
             }
             
-            .hero {
-                padding: 40px 15px;
-            }
-            
             .hero h1 {
-                font-size: 28px;
+                font-size: 36px;
             }
             
             .hero p {
                 font-size: 16px;
             }
             
-            .section-title {
-                font-size: 24px;
-            }
-            
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-                gap: 20px;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-            
-            .sync-button {
-                bottom: 10px;
-                left: 10px;
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .nav {
-                flex-wrap: wrap;
-            }
-            
-            .modal-content {
-                padding: 20px;
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
         }
     </style>
@@ -618,7 +401,7 @@
     <section class="hero">
         <div class="container">
             <h1>مرحباً بك في المتجر الذكي</h1>
-            <p>أفضل المنتجات بأفضل الأسعار - تسوق الآن ولاول مره في السنبلاوين واستمتع بتجرفة فريدة</p>
+            <p>أفضل المنتجات بأفضل الأسعار - تسوق الآن ولاول مره في السنبلاوين واستمتع بتجربة فريدة</p>
             <a href="#products" class="btn">تصفح المنتجات</a>
         </div>
     </section>
@@ -628,10 +411,6 @@
         <div class="container">
             <h2 class="section-title">منتجاتنا</h2>
             
-            <div id="data-message" class="data-message">
-                <i class="fas fa-sync fa-spin"></i> جاري تحميل المنتجات...
-            </div>
-            
             <div id="products-container" class="products-grid">
                 <!-- المنتجات تظهر هنا -->
             </div>
@@ -639,7 +418,7 @@
     </section>
 
     <!-- الفوتر -->
-    <footer class="footer" id="contact">
+    <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
@@ -649,9 +428,9 @@
                 
                 <div class="footer-section">
                     <h3>روابط سريعة</h3>
-                    <p><a href="#products">المنتجات</a></p>
-                    <p><a href="#contact">تواصل معنا</a></p>
-                    <p><a href="admin/login.html">لوحة التحكم</a></p>
+                    <p><a href="#products" style="color: white; text-decoration: none;">المنتجات</a></p>
+                    <p><a href="#contact" style="color: white; text-decoration: none;">تواصل معنا</a></p>
+                    <p><a href="admin/login.html" style="color: white; text-decoration: none;">لوحة التحكم</a></p>
                 </div>
                 
                 <div class="footer-section">
@@ -667,11 +446,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- زر المزامنة -->
-    <button class="sync-button" onclick="syncWithAdminDB()" title="مزامنة المنتجات">
-        <i class="fas fa-sync-alt"></i>
-    </button>
 
     <!-- مودال السلة -->
     <div id="cart-modal" class="modal">
@@ -730,328 +504,41 @@
     </div>
 
     <!-- التنبيهات -->
-    <div id="alert-container" style="position: fixed; top: 20px; right: 20px; z-index: 1001; max-width: 350px;"></div>
+    <div id="alert-container" style="position: fixed; top: 20px; right: 20px; z-index: 1001;"></div>
 
+    <script src="js/database.js"></script>
     <script>
-    // ============================================
-    // نظام قاعدة البيانات المشترك
-    // ============================================
-    
-    // اسم المفتاح في localStorage (نفسه في index و admin)
-    const STORE_DB_KEY = 'SmartStore_Database_v2';
-    
-    // تهيئة قاعدة البيانات
-    function initializeStoreDB() {
-        // تحميل قاعدة البيانات الحالية
-        let storeDB = localStorage.getItem(STORE_DB_KEY);
-        
-        if (!storeDB) {
-            // إنشاء قاعدة بيانات جديدة
-            storeDB = {
-                // المنتجات
-                products: [
-                    {
-                        id: 1,
-                        name: 'سماعات بلوتوث',
-                        description: 'سماعات لاسلكية عالية الجودة مع شحن سريع',
-                        price: 350,
-                        stock: 15,
-                        categoryId: 1,
-                        image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'
-                    },
-                    {
-                        id: 2,
-                        name: 'هاتف ذكي',
-                        description: 'هاتف ذكي بشاشة 6.7 بوصة وكاميرا 108 ميجابكسل',
-                        price: 4500,
-                        stock: 8,
-                        categoryId: 1,
-                        image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'
-                    },
-                    {
-                        id: 3,
-                        name: 'ساعة ذكية',
-                        description: 'ساعة ذكية متطورة مع تتبع اللياقة البدنية',
-                        price: 1200,
-                        stock: 12,
-                        categoryId: 1,
-                        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'
-                    }
-                ],
-                
-                // الفئات
-                categories: [
-                    { id: 1, name: 'الكترونيات' },
-                    { id: 2, name: 'ملابس' },
-                    { id: 3, name: 'أجهزة منزلية' },
-                    { id: 4, name: 'اكسسوارات' }
-                ],
-                
-                // الطلبات
-                orders: [],
-                
-                // المستخدمين
-                adminUsers: [
-                    { 
-                        id: 1, 
-                        username: 'admin', 
-                        password: '123456', 
-                        name: 'مدير النظام',
-                        email: 'admin@smartstore.com',
-                        role: 'admin'
-                    }
-                ],
-                
-                // الإعدادات
-                settings: {
-                    storeName: 'المتجر الذكي',
-                    currency: 'ج.م',
-                    deliveryInsideFree: true,
-                    deliveryOutsideCost: 30,
-                    lastSync: new Date().toISOString()
-                }
-            };
-            
-            // حفظ قاعدة البيانات
-            localStorage.setItem(STORE_DB_KEY, JSON.stringify(storeDB));
-            console.log('✅ تم إنشاء قاعدة بيانات جديدة');
-        } else {
-            storeDB = JSON.parse(storeDB);
-            console.log('✅ تم تحميل قاعدة البيانات الحالية');
-        }
-        
-        return storeDB;
-    }
-    
-    // دالة للحصول على البيانات
-    function getStoreData(key) {
-        try {
-            const db = JSON.parse(localStorage.getItem(STORE_DB_KEY) || '{}');
-            return db[key] || [];
-        } catch (error) {
-            console.error('❌ خطأ في قراءة قاعدة البيانات:', error);
-            return [];
-        }
-    }
-    
-    // دالة لإضافة بيانات
-    function addStoreData(key, item) {
-        try {
-            const db = JSON.parse(localStorage.getItem(STORE_DB_KEY) || '{}');
-            if (!db[key]) db[key] = [];
-            
-            // إضافة معرف فريد
-            const maxId = db[key].length > 0 ? Math.max(...db[key].map(i => i.id)) : 0;
-            item.id = maxId + 1;
-            item.createdAt = new Date().toISOString();
-            
-            db[key].push(item);
-            db.settings.lastSync = new Date().toISOString();
-            
-            localStorage.setItem(STORE_DB_KEY, JSON.stringify(db));
-            console.log(`✅ تم إضافة ${key} جديد - ID: ${item.id}`);
-            
-            return item;
-        } catch (error) {
-            console.error(`❌ خطأ في إضافة ${key}:`, error);
-            return null;
-        }
-    }
-    
-    // دالة لتحديث البيانات
-    function updateStoreData(key, id, updates) {
-        try {
-            const db = JSON.parse(localStorage.getItem(STORE_DB_KEY) || '{}');
-            if (!db[key]) return false;
-            
-            const index = db[key].findIndex(item => item.id == id);
-            if (index === -1) return false;
-            
-            db[key][index] = { ...db[key][index], ...updates, updatedAt: new Date().toISOString() };
-            db.settings.lastSync = new Date().toISOString();
-            
-            localStorage.setItem(STORE_DB_KEY, JSON.stringify(db));
-            console.log(`✅ تم تحديث ${key} رقم ${id}`);
-            
-            return true;
-        } catch (error) {
-            console.error(`❌ خطأ في تحديث ${key}:`, error);
-            return false;
-        }
-    }
-    
-    // دالة لحذف بيانات
-    function deleteStoreData(key, id) {
-        try {
-            const db = JSON.parse(localStorage.getItem(STORE_DB_KEY) || '{}');
-            if (!db[key]) return false;
-            
-            const initialLength = db[key].length;
-            db[key] = db[key].filter(item => item.id != id);
-            
-            if (db[key].length < initialLength) {
-                db.settings.lastSync = new Date().toISOString();
-                localStorage.setItem(STORE_DB_KEY, JSON.stringify(db));
-                console.log(`✅ تم حذف ${key} رقم ${id}`);
-                return true;
-            }
-            
-            return false;
-        } catch (error) {
-            console.error(`❌ خطأ في حذف ${key}:`, error);
-            return false;
-        }
-    }
-    
-    // ============================================
-    // دالة مزامنة مع قاعدة بيانات لوحة التحكم
-    // ============================================
-    
-    function syncWithAdminDB() {
-        showAlert('<i class="fas fa-sync fa-spin"></i> جاري مزامنة المنتجات مع لوحة التحكم...', 'success');
-        
-        try {
-            // 1. محاولة الحصول على قاعدة البيانات القديمة (لوحة التحكم)
-            const oldAdminDB = localStorage.getItem('SmartStoreDB');
-            const oldProducts = oldAdminDB ? JSON.parse(oldAdminDB).products : [];
-            
-            // 2. الحصول على قاعدة البيانات الحالية (المتجر)
-            const currentDB = JSON.parse(localStorage.getItem(STORE_DB_KEY) || '{}');
-            
-            if (oldProducts && oldProducts.length > 0) {
-                console.log('📥 وجدت منتجات في لوحة التحكم:', oldProducts.length);
-                
-                // 3. دمج المنتجات من لوحة التحكم
-                oldProducts.forEach(oldProduct => {
-                    // التحقق إذا كان المنتج موجود بالفعل
-                    const exists = currentDB.products?.some(p => 
-                        p.id === oldProduct.id || 
-                        p.name === oldProduct.name
-                    );
-                    
-                    if (!exists) {
-                        // إضافة المنتج الجديد
-                        const newProduct = {
-                            ...oldProduct,
-                            id: currentDB.products?.length > 0 ? 
-                                Math.max(...currentDB.products.map(p => p.id)) + 1 : 1,
-                            createdAt: new Date().toISOString()
-                        };
-                        
-                        if (!currentDB.products) currentDB.products = [];
-                        currentDB.products.push(newProduct);
-                        
-                        console.log('➕ تمت إضافة منتج:', newProduct.name);
-                    }
-                });
-                
-                // 4. تحديث وقت المزامنة
-                currentDB.settings.lastSync = new Date().toISOString();
-                
-                // 5. حفظ قاعدة البيانات المحدثة
-                localStorage.setItem(STORE_DB_KEY, JSON.stringify(currentDB));
-                
-                // 6. إعادة تحميل المنتجات
-                loadProducts();
-                
-                showAlert(`✅ تمت المزامنة بنجاح! تمت إضافة ${oldProducts.length} منتج`, 'success');
-            } else {
-                showAlert('ℹ️ لا توجد منتجات جديدة في لوحة التحكم', 'success');
-            }
-            
-        } catch (error) {
-            console.error('❌ خطأ في المزامنة:', error);
-            showAlert('❌ حدث خطأ أثناء المزامنة', 'error');
-        }
-    }
-    
-    // ============================================
-    // تحميل وعرض المنتجات
-    // ============================================
-    
+    // 1. تحميل المنتجات عند فتح الصفحة
     function loadProducts() {
+        const products = SmartStoreDB.get('products');
+        const categories = SmartStoreDB.get('categories');
         const container = document.getElementById('products-container');
-        const messageElement = document.getElementById('data-message');
         
-        // إظهار حالة التحميل
-        container.innerHTML = '';
-        messageElement.innerHTML = '<i class="fas fa-sync fa-spin"></i> جاري تحميل المنتجات...';
-        
-        // الحصول على البيانات من قاعدة البيانات المشتركة
-        const products = getStoreData('products');
-        const categories = getStoreData('categories');
-        const db = JSON.parse(localStorage.getItem(STORE_DB_KEY) || '{}');
-        
-        console.log('📦 المنتجات المحملة:', products);
-        console.log('📊 قاعدة البيانات:', db);
-        
-        // عرض معلومات قاعدة البيانات
-        const lastSync = db.settings?.lastSync ? 
-            new Date(db.settings.lastSync).toLocaleString('ar-EG') : 'غير معروف';
-        
-        messageElement.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                <div>
-                    <i class="fas fa-box"></i> المنتجات: <strong>${products.length}</strong>
-                    <span style="margin: 0 10px;">•</span>
-                    <i class="fas fa-layer-group"></i> الفئات: <strong>${categories.length}</strong>
-                    <span style="margin: 0 10px;">•</span>
-                    <i class="fas fa-history"></i> آخر تحديث: ${lastSync}
-                </div>
-                <div>
-                    <button onclick="refreshProducts()" class="btn" style="padding: 5px 15px; font-size: 13px; margin-left: 5px;">
-                        <i class="fas fa-redo"></i> تحديث
-                    </button>
-                    <button onclick="showDatabaseInfo()" class="btn" style="padding: 5px 15px; font-size: 13px; background: #9b59b6;">
-                        <i class="fas fa-info-circle"></i> معلومات
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        // إذا لم تكن هناك منتجات
-        if (products.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-box-open"></i>
-                    <h3 style="color: #7f8c8d; margin-bottom: 15px;">لا توجد منتجات حالياً</h3>
-                    <p style="color: #95a5a6; margin-bottom: 20px;">سجل الدخول إلى لوحة التحكم لإضافة منتجاتك</p>
-                    <button onclick="syncWithAdminDB()" class="btn">
-                        <i class="fas fa-sync-alt"></i> مزامنة مع لوحة التحكم
-                    </button>
-                </div>
-            `;
+        if (!products.length) {
+            container.innerHTML = '<p style="text-align: center; width: 100%;">لا توجد منتجات حالياً</p>';
             return;
         }
         
-        // عرض المنتجات
         container.innerHTML = products.map(product => {
             const category = categories.find(c => c.id === product.categoryId);
             const stockClass = product.stock > 0 ? 'in-stock' : 'out-of-stock';
             const stockText = product.stock > 0 ? `متوفر (${product.stock})` : 'نفذ من المخزون';
-            const stockIcon = product.stock > 0 ? 'check-circle' : 'times-circle';
             
             return `
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="${product.image || 'https://via.placeholder.com/300x200/cccccc/666666?text=صورة+المنتج'}" 
-                             alt="${product.name}"
-                             onerror="this.src='https://via.placeholder.com/300x200/cccccc/666666?text=صورة+المنتج'">
+                        <img src="${product.image}" alt="${product.name}">
                     </div>
                     <div class="product-info">
                         <div class="product-category">${category?.name || 'عام'}</div>
                         <h3 class="product-name">${product.name}</h3>
-                        <p style="font-size: 14px; color: #666; height: 40px; overflow: hidden; margin-bottom: 10px;">
-                            ${product.description || ''}
-                        </p>
-                        <div class="product-price">${product.price ? product.price.toLocaleString('ar-EG') : '0'} ج.م</div>
+                        <p>${product.description}</p>
+                        <div class="product-price">${product.price.toLocaleString('ar-EG')} ج.م</div>
                         <div class="stock ${stockClass}">
-                            <i class="fas fa-${stockIcon}"></i> 
-                            ${stockText}
+                            <i class="fas fa-${product.stock > 0 ? 'check' : 'times'}"></i> ${stockText}
                         </div>
                         <button class="btn" onclick="addToCart(${product.id})" 
-                                ${product.stock <= 0 ? 'disabled style="background: #95a5a6; cursor: not-allowed;"' : ''}
-                                style="width: 100%; padding: 8px 15px; font-size: 14px;">
+                                ${product.stock <= 0 ? 'disabled style="background: #95a5a6;"' : ''}>
                             <i class="fas fa-cart-plus"></i> أضف للسلة
                         </button>
                     </div>
@@ -1060,107 +547,21 @@
         }).join('');
     }
     
-    // دالة لعرض معلومات قاعدة البيانات
-    function showDatabaseInfo() {
-        const db = JSON.parse(localStorage.getItem(STORE_DB_KEY) || '{}');
-        const products = getStoreData('products');
-        const categories = getStoreData('categories');
-        const orders = getStoreData('orders');
-        
-        const info = `
-            <h3><i class="fas fa-database"></i> معلومات قاعدة البيانات</h3>
-            <p><strong>المنتجات:</strong> ${products.length} منتج</p>
-            <p><strong>الفئات:</strong> ${categories.length} فئة</p>
-            <p><strong>الطلبات:</strong> ${orders.length} طلب</p>
-            <p><strong>آخر تحديث:</strong> ${db.settings?.lastSync ? new Date(db.settings.lastSync).toLocaleString('ar-EG') : 'غير معروف'}</p>
-            <hr>
-            <button onclick="exportDatabase()" class="btn" style="margin-top: 10px;">
-                <i class="fas fa-download"></i> تصدير قاعدة البيانات
-            </button>
-            <button onclick="importDatabase()" class="btn" style="margin-top: 10px; background: #e74c3c;">
-                <i class="fas fa-upload"></i> استيراد قاعدة البيانات
-            </button>
-        `;
-        
-        showAlert(info, 'success');
-    }
-    
-    // دالة لتصدير قاعدة البيانات
-    function exportDatabase() {
-        const db = localStorage.getItem(STORE_DB_KEY);
-        const blob = new Blob([db], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'smartstore-database-backup.json';
-        a.click();
-        URL.revokeObjectURL(url);
-        
-        showAlert('✅ تم تصدير قاعدة البيانات بنجاح', 'success');
-    }
-    
-    // دالة لاستيراد قاعدة البيانات
-    function importDatabase() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.json';
-        
-        input.onchange = function(e) {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            
-            reader.onload = function(event) {
-                try {
-                    const db = JSON.parse(event.target.result);
-                    localStorage.setItem(STORE_DB_KEY, JSON.stringify(db));
-                    showAlert('✅ تم استيراد قاعدة البيانات بنجاح', 'success');
-                    loadProducts();
-                } catch (error) {
-                    showAlert('❌ خطأ في استيراد قاعدة البيانات', 'error');
-                }
-            };
-            
-            reader.readAsText(file);
-        };
-        
-        input.click();
-    }
-    
-    // دالة لتحديث المنتجات
-    function refreshProducts() {
-        showAlert('<i class="fas fa-sync fa-spin"></i> جاري تحديث المنتجات...', 'success');
-        setTimeout(() => {
-            loadProducts();
-            showAlert('✅ تم تحديث المنتجات بنجاح', 'success');
-        }, 500);
-    }
-    
-    // ============================================
-    // إدارة سلة التسوق
-    // ============================================
-    
-    let cart = JSON.parse(localStorage.getItem('smartstore_cart_v2') || '[]');
+    // 2. إدارة السلة
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
     
     function updateCartCount() {
         const total = cart.reduce((sum, item) => sum + item.quantity, 0);
-        const cartCount = document.getElementById('cart-count');
-        cartCount.textContent = total;
-        cartCount.style.display = total > 0 ? 'flex' : 'none';
+        document.getElementById('cart-count').textContent = total;
+        document.getElementById('cart-count').style.display = total > 0 ? 'flex' : 'none';
     }
     
     function addToCart(productId) {
-        const products = getStoreData('products');
+        const products = SmartStoreDB.get('products');
         const product = products.find(p => p.id == productId);
         
-        if (!product) {
-            showAlert('المنتج غير موجود', 'error');
-            return;
-        }
-        
-        if (product.stock <= 0) {
-            showAlert('المنتج نفذ من المخزون', 'error');
-            return;
-        }
+        if (!product) return showAlert('المنتج غير موجود', 'error');
+        if (product.stock <= 0) return showAlert('المنتج نفذ من المخزون', 'error');
         
         const existingItem = cart.find(item => item.id == productId);
         
@@ -1176,9 +577,9 @@
             });
         }
         
-        localStorage.setItem('smartstore_cart_v2', JSON.stringify(cart));
+        localStorage.setItem('cart', JSON.stringify(cart));
         updateCartCount();
-        showAlert(`تم إضافة "${product.name}" إلى السلة ✓`, 'success');
+        showAlert(`تم إضافة ${product.name} إلى السلة`, 'success');
     }
     
     function openCart() {
@@ -1187,28 +588,19 @@
         const totalElement = document.getElementById('cart-total');
         
         if (cart.length === 0) {
-            itemsContainer.innerHTML = `
-                <div style="text-align: center; padding: 30px; color: #666;">
-                    <i class="fas fa-shopping-cart" style="font-size: 48px; margin-bottom: 15px; opacity: 0.3;"></i>
-                    <p>سلة التسوق فارغة</p>
-                    <p style="font-size: 14px; color: #999;">أضف بعض المنتجات لتظهر هنا</p>
-                </div>
-            `;
+            itemsContainer.innerHTML = '<p style="text-align: center; color: #666;">السلة فارغة</p>';
             totalElement.textContent = 'الإجمالي: 0 ج.م';
         } else {
             itemsContainer.innerHTML = cart.map(item => `
                 <div class="cart-item">
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-details">
-                            ${item.price.toLocaleString('ar-EG')} ج.م × ${item.quantity}
-                        </div>
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        <small>${item.price.toLocaleString('ar-EG')} ج.م × ${item.quantity}</small>
                     </div>
-                    <div style="display: flex; align-items: center;">
-                        <div class="cart-item-price">${(item.price * item.quantity).toLocaleString('ar-EG')} ج.م</div>
-                        <button onclick="removeFromCart(${item.id})" 
-                                style="background: #e74c3c; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-trash" style="font-size: 12px;"></i>
+                    <div>
+                        <strong>${(item.price * item.quantity).toLocaleString('ar-EG')} ج.م</strong>
+                        <button onclick="removeFromCart(${item.id})" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; margin-right: 10px; border-radius: 3px; cursor: pointer;">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </div>
@@ -1227,9 +619,9 @@
     
     function removeFromCart(productId) {
         cart = cart.filter(item => item.id != productId);
-        localStorage.setItem('smartstore_cart_v2', JSON.stringify(cart));
+        localStorage.setItem('cart', JSON.stringify(cart));
         updateCartCount();
-        openCart();
+        openCart(); // تحديث السلة
     }
     
     function checkout() {
@@ -1241,10 +633,7 @@
         document.getElementById('checkout-modal').style.display = 'none';
     }
     
-    // ============================================
-    // إتمام الطلب
-    // ============================================
-    
+    // 3. إتمام الطلب
     function placeOrder(event) {
         event.preventDefault();
         
@@ -1253,20 +642,11 @@
             return;
         }
         
-        const customerName = document.getElementById('customer-name').value.trim();
-        const customerPhone = document.getElementById('customer-phone').value.trim();
-        const customerAddress = document.getElementById('customer-address').value.trim();
-        
-        if (!customerName || !customerPhone || !customerAddress) {
-            showAlert('يرجى ملء جميع الحقول المطلوبة', 'error');
-            return;
-        }
-        
         const order = {
-            customerName,
-            customerPhone,
-            customerAddress,
-            notes: document.getElementById('order-notes').value.trim(),
+            customerName: document.getElementById('customer-name').value,
+            customerPhone: document.getElementById('customer-phone').value,
+            customerAddress: document.getElementById('customer-address').value,
+            notes: document.getElementById('order-notes').value,
             items: cart.map(item => ({
                 productId: item.id,
                 name: item.name,
@@ -1279,55 +659,40 @@
         };
         
         // إنشاء رقم طلب
-        const orders = getStoreData('orders');
-        order.orderNumber = `ORD-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(orders.length + 1).padStart(3, '0')}`;
+        const orders = SmartStoreDB.get('orders');
+        order.orderNumber = `ORD-${new Date().getFullYear()}-${String(orders.length + 1).padStart(3, '0')}`;
         
-        // إضافة الطلب إلى قاعدة البيانات
-        addStoreData('orders', order);
+        // إضافة الطلب
+        SmartStoreDB.add('orders', order);
         
         // تفريغ السلة
         cart = [];
-        localStorage.setItem('smartstore_cart_v2', JSON.stringify(cart));
+        localStorage.setItem('cart', JSON.stringify(cart));
         updateCartCount();
         
         // إغلاق النوافذ
         closeCheckout();
         
         // إظهار رسالة نجاح
-        showAlert(`
-            <div style="text-align: center;">
-                <i class="fas fa-check-circle" style="font-size: 24px; color: #27ae60; margin-bottom: 10px;"></i>
-                <p style="font-weight: bold;">تم إرسال طلبك بنجاح!</p>
-                <p>رقم الطلب: <strong>${order.orderNumber}</strong></p>
-                <p style="font-size: 14px; color: #666;">سيتم التواصل معك قريباً</p>
-            </div>
-        `, 'success');
+        showAlert(`تم إرسال طلبك بنجاح! رقم الطلب: ${order.orderNumber}`, 'success');
         
         // تفريغ النموذج
         document.getElementById('checkout-form').reset();
     }
     
-    // ============================================
-    // التنبيهات
-    // ============================================
-    
+    // 4. عرض التنبيهات
     function showAlert(message, type = 'success') {
         const container = document.getElementById('alert-container');
         const alert = document.createElement('div');
         alert.className = `alert alert-${type}`;
         alert.innerHTML = `
-            <div style="flex: 1;">
-                ${message}
-            </div>
-            <button onclick="this.parentElement.remove()" 
-                    style="background: none; border: none; cursor: pointer; font-size: 18px; color: inherit; padding: 0 5px;">
-                ×
-            </button>
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            ${message}
+            <button onclick="this.parentElement.remove()" style="float: left; background: none; border: none; cursor: pointer;">×</button>
         `;
         
         container.appendChild(alert);
         
-        // إزالة التنبيه تلقائياً بعد 5 ثواني
         setTimeout(() => {
             if (alert.parentElement) {
                 alert.remove();
@@ -1335,42 +700,10 @@
         }, 5000);
     }
     
-    // ============================================
-    // تهيئة الصفحة
-    // ============================================
-    
+    // 5. تهيئة الصفحة
     document.addEventListener('DOMContentLoaded', function() {
-        // 1. تهيئة قاعدة البيانات
-        initializeStoreDB();
-        
-        // 2. تحميل المنتجات
         loadProducts();
-        
-        // 3. تحديث عداد السلة
         updateCartCount();
-        
-        // 4. التحقق من وجود قاعدة بيانات لوحة التحكم القديمة
-        setTimeout(() => {
-            const oldAdminDB = localStorage.getItem('SmartStoreDB');
-            if (oldAdminDB) {
-                const oldDB = JSON.parse(oldAdminDB);
-                if (oldDB.products && oldDB.products.length > 0) {
-                    showAlert(`
-                        <div>
-                            <i class="fas fa-exclamation-circle"></i>
-                            <strong>ملاحظة:</strong> يوجد ${oldDB.products.length} منتج في لوحة التحكم القديمة
-                            <br>
-                            <button onclick="syncWithAdminDB()" class="btn" style="padding: 3px 10px; font-size: 12px; margin-top: 5px;">
-                                <i class="fas fa-sync-alt"></i> انقر هنا للمزامنة
-                            </button>
-                        </div>
-                    `, 'success');
-                }
-            }
-        }, 1000);
-        
-        console.log('🚀 الصفحة الرئيسية جاهزة!');
-        console.log('📊 قاعدة البيانات:', JSON.parse(localStorage.getItem(STORE_DB_KEY) || '{}'));
     });
     
     // إغلاق المودال عند النقر خارج المحتوى
@@ -1379,14 +712,6 @@
             event.target.style.display = 'none';
         }
     };
-    
-    // تحديث المنتجات تلقائياً كل دقيقة
-    setInterval(() => {
-        if (document.visibilityState === 'visible') {
-            loadProducts();
-        }
-    }, 60000);
-    
     </script>
 </body>
 </html>
