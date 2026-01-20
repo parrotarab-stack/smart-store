@@ -771,10 +771,16 @@
     }
     
     // 5. تهيئة الصفحة
-    document.addEventListener('DOMContentLoaded', function() {
-        loadProducts();
-        updateCartCount();
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة قاعدة البيانات
+    SmartStoreDB.init();
+    
+    // تحميل المنتجات
+    loadProducts();
+    updateCartCount();
+    
+    console.log('✅ تم تهيئة النظام');
+});
     
     // إغلاق المودال عند النقر خارج المحتوى
     window.onclick = function(event) {
@@ -786,3 +792,4 @@
 </body>
 
 </html>
+
