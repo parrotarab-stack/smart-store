@@ -1,70 +1,73 @@
-{
-  "categories": [
-    {
-      "id": 1,
-      "name": "إلكترونيات",
-      "icon": "fas fa-laptop",
-      "description": "أجهزة إلكترونية حديثة"
-    },
-    {
-      "id": 2,
-      "name": "ملابس",
-      "icon": "fas fa-tshirt",
-      "description": "ملابس بأحدث الموديلات"
-    },
-    {
-      "id": 3,
-      "name": "أثاث",
-      "icon": "fas fa-couch",
-      "description": "أثاث منزلي ومكتبي"
-    },
-    {
-      "id": 4,
-      "name": "كتب",
-      "icon": "fas fa-book",
-      "description": "كتب متنوعة في جميع المجالات"
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+    color: #1f2937;
+    background-color: #f9fafb;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
-  ],
-  "products": [
-    {
-      "id": 1,
-      "name": "هاتف سامسونج جالاكسي",
-      "description": "أحدث هاتف ذكي بكاميرا 108 ميجابكسل",
-      "price": 3500,
-      "oldPrice": 4000,
-      "discount": 12,
-      "image": "https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=سامسونج+جالاكسي",
-      "categoryId": 1,
-      "stock": 8
-    },
-    {
-      "id": 2,
-      "name": "تيشيرت قطني",
-      "description": "تيشيرت صيفي مريح وقطني 100%",
-      "price": 75,
-      "oldPrice": 120,
-      "discount": 37,
-      "image": "https://via.placeholder.com/300x200/10B981/FFFFFF?text=تيشيرت+قطني",
-      "categoryId": 2,
-      "stock": 20
-    },
-    {
-      "id": 3,
-      "name": "كتاب تطوير الويب",
-      "description": "كتاب شامل لتعلم تطوير المواقع",
-      "price": 150,
-      "image": "https://via.placeholder.com/300x200/F59E0B/FFFFFF?text=كتاب+تطوير+الويب",
-      "categoryId": 4,
-      "stock": 15
-    },
-    {
-      "id": 4,
-      "name": "كنبة ثلاثية",
-      "description": "كنبة فخمة ومريحة للصالة",
-      "price": 3200,
-      "image": "https://via.placeholder.com/300x200/8B5CF6/FFFFFF?text=كنبة+ثلاثية",
-      "categoryId": 3,
-      "stock": 3
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-  ]
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .container {
+        padding: 0 0.5rem;
+    }
+}
+
+/* Hide elements with x-cloak */
+[x-cloak] {
+    display: none !important;
+}
+
+/* Image fallback */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Focus styles */
+button:focus,
+input:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+    background-color: #3b82f6;
+    color: white;
 }
