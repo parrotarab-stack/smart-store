@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طباعة الطلبات - لوحة التحكم</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .invoice-header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .invoice-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .invoice-from, .invoice-to {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .invoice-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .invoice-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        .invoice-table th {
+            background: #2c3e50;
+            color: white;
+            padding: 12px;
+            text-align: right;
+        }
+        
+        .invoice-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .invoice-total {
+            text-align: left;
+            font-size: 18px;
+            font-weight: bold;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .invoice-footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        
+        .print-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .print-option {
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .print-option:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-5px);
+        }
+        
+        .print-option i {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .print-option h3 {
+            margin-bottom: 10px;
+        }
+        
+        /* أنماط الطباعة */
+        @media print {
+            .print-controls, .btn {
+                display: none !important;
+            }
+            
+            body {
+                font-size: 12pt;
+                line-height: 1.4;
+            }
+            
+            .container {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            .invoice-header {
+                text-align: center;
+                margin-bottom: 20pt;
+            }
+            
+            .invoice-table th {
+                background: #ddd !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+                color: black !important;
+            }
+            
+            .invoice-section {
+                background: #f0f0f0 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .invoice-total {
+                background: #e0e0e0 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الشريط الجانبي -->
+    <aside class="sidebar">
+        <!-- نفس الشريط الجانبي -->
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="content">
+        <!-- التنبيهات -->
+        <div id="alert-container"></div>
+        
+        <!-- الهيدر -->
+        <div class="header">
+            <h1><i class="fas fa-print"></i> نظام الطباعة والتقارير</h1>
+            <a href="orders.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-right"></i> رجوع للطلبات
+            </a>
+        </div>
+
+        <!-- خيارات الطباعة -->
+        <div class="print-controls">
+            <div class="print-option" onclick="printSingleOrder()">
+                <i class="fas fa-file-invoice"></i>
+                <h3>طباعة طلب فردي</h3>
+                <p>طباعة فاتورة لطلب محدد</p>
+            </div>
+            
+            <div class="print-option" onclick="printDailyOrders()">
+                <i class="fas fa-calendar-day"></i>
+                <h3>تقرير يومي</h3>
+                <p>جميع طلبات اليوم في تقرير واحد</p>
+            </div>
+            
+            <div class="print-option" onclick="printCustomReport()">
+                <i class="fas fa-chart-bar"></i>
+                <h3>تقرير مخصص</h3>
+                <p>تقرير حسب الفترة المحددة</p>
+            </div>
+        </div>
+
+        <!-- منطقة الطباعة -->
+        <div class="container" id="print-area">
+            <!-- المحتوى المطبوع يظهر هنا -->
+        </div>
+    </main>
+
+    <script src="../js/database.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+    // 1. التحقق من تسجيل الدخول
+    (function checkAuth() {
+        const user = SmartStoreDB.getCurrentUser();
+        
+        if (!user || user.role !== 'admin') {
+            alert('يجب تسجيل الدخول أولاً');
+            window.location.href = 'login.html';
+            return;
+        }
+    })();
+
+    // 2. طباعة طلب فردي
+    function printSingleOrder() {
+        const orderId = prompt('الرجاء إدخال رقم الطلب أو معرفه:');
+        if (!orderId) return;
+        
+        const orders = SmartStoreDB.get('orders');
+        const order = orders.find(o => o.id == orderId || o.orderNumber == orderId);
+        
+        if (!order) {
+            alert('الطلب غير موجود');
+            return;
+        }
+        
+        const printArea = document.getElementById('print-area');
+        printArea.innerHTML = generateInvoiceHTML(order);
+        
+        // طباعة بعد ثانية
+        setTimeout(() => {
+            window.print();
+        }, 500);
+    }
+
+    // 3. طباعة تقرير يومي
+    function printDailyOrders() {
+        const orders = SmartStoreDB.get('orders');
+        const today = new Date().toDateString();
+        
+        const dailyOrders = orders.filter(order => {
+            const orderDate = new Date(order.createdAt).toDateString();
+            return orderDate === today;
+        });
+        
+        if (dailyOrders.length === 0) {
+            alert('لا توجد طلبات لهذا اليوم');
+            return;
+        }
+        
+        const printArea = document.getElementById('print-area');
+        printArea.innerHTML = generateDailyReportHTML(dailyOrders);
+        
+        setTimeout(() => {
+            window.print();
+        }, 500);
+    }
+
+    // 4. طباعة تقرير مخصص
+    function printCustomReport() {
+        const startDate = prompt('تاريخ البداية (YYYY-MM-DD):');
+        const endDate = prompt('تاريخ النهاية (YYYY-MM-DD):');
+        
+        if (!startDate || !endDate) return;
+        
+        const orders = SmartStoreDB.get('orders');
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        
+        const filteredOrders = orders.filter(order => {
+            const orderDate = new Date(order.createdAt);
+            return orderDate >= start && orderDate <= end;
+        });
+        
+        if (filteredOrders.length === 0) {
+            alert('لا توجد طلبات في هذه الفترة');
+            return;
+        }
+        
+        const printArea = document.getElementById('print-area');
+        printArea.innerHTML = generateCustomReportHTML(filteredOrders, startDate, endDate);
+        
+        setTimeout(() => {
+            window.print();
+        }, 500);
+    }
+
+    // 5. توليد HTML للفاتورة الفردية
+    function generateInvoiceHTML(order) {
+        const settings = StoreUtils.loadSettings();
+        const totalItems = order.items.reduce((sum, item) => sum + item.quantity, 0);
+        
+        return `
+            <div class="invoice-header">
+                <h1><i class="fas fa-store"></i> ${settings.storeName}</h1>
+                <p>فاتورة مبيعات</p>
+                <div style="display: flex; justify-content: center; gap: 30px; margin-top: 15px;">
+                    <div><strong>رقم الفاتورة:</strong> ${order.orderNumber}</div>
+                    <div><strong>التاريخ:</strong> ${StoreUtils.formatDate(order.createdAt)}</div>
+                    <div><strong>الحالة:</strong> ${order.status}</div>
+                </div>
+            </div>
+            
+            <div class="invoice-info">
+                <div class="invoice-from invoice-section">
+                    <h3>من:</h3>
+                    <p><strong>${settings.storeName}</strong></p>
+                    <p>${settings.storeAddress}</p>
+                    <p>📞 ${settings.storePhone}</p>
+                    <p>📧 ${settings.storeEmail}</p>
+                </div>
+                
+                <div class="invoice-to invoice-section">
+                    <h3>إلى:</h3>
+                    <p><strong>${order.customerName}</strong></p>
+                    <p>${order.customerAddress}</p>
+                    <p>📞 ${order.customerPhone}</p>
+                </div>
+            </div>
+            
+            <div class="invoice-section">
+                <h3>تفاصيل الطلب</h3>
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>المنتج</th>
+                            <th>الكمية</th>
+                            <th>السعر</th>
+                            <th>المجموع</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${order.items.map((item, index) => `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${item.name}</td>
+                                <td>${item.quantity}</td>
+                                <td>${item.price.toLocaleString('ar-EG')} ${settings.currency}</td>
+                                <td>${(item.price * item.quantity).toLocaleString('ar-EG')} ${settings.currency}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                <div class="invoice-section" style="flex: 2; min-width: 300px;">
+                    <h3>ملخص الدفع</h3>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>إجمالي المنتجات:</span>
+                        <span>${order.total.toLocaleString('ar-EG')} ${settings.currency}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>تكلفة التوصيل:</span>
+                        <span>0 ${settings.currency}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>الضريبة (${settings.tax}%):</span>
+                        <span>${(order.total * (settings.tax / 100)).toLocaleString('ar-EG')} ${settings.currency}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; padding-top: 10px; border-top: 2px solid #ddd;">
+                        <span>المبلغ الإجمالي:</span>
+                        <span style="color: #e74c3c;">${(order.total + (order.total * (settings.tax / 100))).toLocaleString('ar-EG')} ${settings.currency}</span>
+                    </div>
+                </div>
+                
+                <div class="invoice-section" style="flex: 1; min-width: 250px;">
+                    <h3>ملخص الطلب</h3>
+                    <p><strong>عدد المنتجات:</strong> ${totalItems}</p>
+                    <p><strong>طريقة الدفع:</strong> نقداً عند الاستلام</p>
+                    <p><strong>طريقة التوصيل:</strong> توصيل سريع</p>
+                    ${order.notes ? `<p><strong>ملاحظات:</strong> ${order.notes}</p>` : ''}
+                </div>
+            </div>
+            
+            <div class="invoice-footer">
+                <p>شكراً لثقتكم بنا!</p>
+                <p>للاستفسارات: ${settings.storePhone} | ${settings.storeEmail}</p>
+                <p>${new Date().toLocaleDateString('ar-EG')} - ${new Date().toLocaleTimeString('ar-EG')}</p>
+            </div>
+        `;
+    }
+
+    // 6. توليد HTML للتقرير اليومي
+    function generateDailyReportHTML(orders) {
+        const settings = StoreUtils.loadSettings();
+        const today = new Date().toLocaleDateString('ar-EG');
+        const totalOrders = orders.length;
+        const totalAmount = orders.reduce((sum, order) => sum + order.total, 0);
+        const totalItems = orders.reduce((sum, order) => 
+            sum + order.items.reduce((itemSum, item) => itemSum + item.quantity, 0), 0
+        );
+        
+        // تجميع حسب الحالة
+        const statusCount = {};
+        orders.forEach(order => {
+            statusCount[order.status] = (statusCount[order.status] || 0) + 1;
+        });
+        
+        let content = `
+            <div class="invoice-header">
+                <h1><i class="fas fa-calendar-day"></i> ${settings.storeName}</h1>
+                <h2>تقرير المبيعات اليومي</h2>
+                <p>${today}</p>
+            </div>
+            
+            <div class="invoice-info">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; width: 100%;">
+                    <div class="invoice-section">
+                        <h3>الإحصائيات</h3>
+                        <p><strong>عدد الطلبات:</strong> ${totalOrders}</p>
+                        <p><strong>إجمالي المبيعات:</strong> ${totalAmount.toLocaleString('ar-EG')} ${settings.currency}</p>
+                        <p><strong>عدد المنتجات:</strong> ${totalItems}</p>
+                        <p><strong>متوسط قيمة الطلب:</strong> ${(totalAmount / totalOrders).toLocaleString('ar-EG')} ${settings.currency}</p>
+                    </div>
+                    
+                    <div class="invoice-section">
+                        <h3>حالة الطلبات</h3>
+                        ${Object.entries(statusCount).map(([status, count]) => `
+                            <p><strong>${status}:</strong> ${count}</p>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // عرض كل الطلبات
+        orders.forEach((order, index) => {
+            content += `
+                <div class="invoice-section ${index > 0 ? 'page-break' : ''}">
+                    <h3>الطلب ${index + 1}: ${order.orderNumber}</h3>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <div>
+                            <p><strong>العميل:</strong> ${order.customerName}</p>
+                            <p><strong>الهاتف:</strong> ${order.customerPhone}</p>
+                        </div>
+                        <div>
+                            <p><strong>التاريخ:</strong> ${StoreUtils.formatDate(order.createdAt)}</p>
+                            <p><strong>الحالة:</strong> ${order.status}</p>
+                        </div>
+                    </div>
+                    
+                    <table class="invoice-table" style="font-size: 12px;">
+                        <thead>
+                            <tr>
+                                <th>المنتج</th>
+                                <th>الكمية</th>
+                                <th>السعر</th>
+                                <th>المجموع</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${order.items.map(item => `
+                                <tr>
+                                    <td>${item.name}</td>
+                                    <td>${item.quantity}</td>
+                                    <td>${item.price.toLocaleString('ar-EG')}</td>
+                                    <td>${(item.price * item.quantity).toLocaleString('ar-EG')}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    
+                    <div style="text-align: left; margin-top: 10px;">
+                        <strong>المجموع: ${order.total.toLocaleString('ar-EG')} ${settings.currency}</strong>
+                    </div>
+                </div>
+            `;
+        });
+        
+        // التذييل
+        content += `
+            <div class="invoice-footer">
+                <p>تم إنشاء التقرير في: ${new Date().toLocaleString('ar-EG')}</p>
+                <p>${settings.storeName} - جميع الحقوق محفوظة © ${new Date().getFullYear()}</p>
+            </div>
+        `;
+        
+        return content;
+    }
+
+    // 7. توليد HTML للتقرير المخصص
+    function generateCustomReportHTML(orders, startDate, endDate) {
+        const settings = StoreUtils.loadSettings();
+        const totalOrders = orders.length;
+        const totalAmount = orders.reduce((sum, order) => sum + order.total, 0);
+        
+        return `
+            <div class="invoice-header">
+                <h1><i class="fas fa-chart-bar"></i> ${settings.storeName}</h1>
+                <h2>تقرير المبيعات المخصص</h2>
+                <p>من ${startDate} إلى ${endDate}</p>
+            </div>
+            
+            <div class="invoice-section">
+                <h3>ملخص التقرير</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+                    <div style="text-align: center; padding: 15px; background: #e8f4fc; border-radius: 10px;">
+                        <div style="font-size: 24px; font-weight: bold; color: #3498db;">${totalOrders}</div>
+                        <div>عدد الطلبات</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #e8f6f3; border-radius: 10px;">
+                        <div style="font-size: 24px; font-weight: bold; color: #27ae60;">${totalAmount.toLocaleString('ar-EG')}</div>
+                        <div>إجمالي المبيعات</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #fef9e7; border-radius: 10px;">
+                        <div style="font-size: 24px; font-weight: bold; color: #f39c12;">${(totalAmount / totalOrders).toLocaleString('ar-EG')}</div>
+                        <div>متوسط الطلب</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="invoice-section">
+                <h3>تفاصيل الطلبات</h3>
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>العميل</th>
+                            <th>التاريخ</th>
+                            <th>المبلغ</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${orders.map(order => `
+                            <tr>
+                                <td>${order.orderNumber}</td>
+                                <td>${order.customerName}</td>
+                                <td>${new Date(order.createdAt).toLocaleDateString('ar-EG')}</td>
+                                <td>${order.total.toLocaleString('ar-EG')} ${settings.currency}</td>
+                                <td>${order.status}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="invoice-footer">
+                <p>تم إنشاء التقرير في: ${new Date().toLocaleString('ar-EG')}</p>
+                <p>ملاحظة: هذا التقرير يغطي الفترة من ${startDate} إلى ${endDate}</p>
+            </div>
+        `;
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رسائل العملاء - لوحة التحكم</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .logo {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo h2 {
+            color: #ffd700;
+            font-size: 20px;
+        }
+        
+        .nav {
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            border-right: 4px solid transparent;
+            transition: 0.3s;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.1);
+            border-right-color: #3498db;
+        }
+        
+        .nav-item i {
+            width: 20px;
+            margin-left: 10px;
+        }
+        
+        .content {
+            flex: 1;
+            margin-right: 250px;
+            padding: 20px;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #2c3e50;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .messages-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            border-right: 4px solid #3498db;
+        }
+        
+        .message-card.unread {
+            border-right-color: #e74c3c;
+            background: #fff8f8;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .message-sender {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .sender-avatar {
+            width: 50px;
+            height: 50px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .sender-info h3 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .sender-info small {
+            color: #666;
+        }
+        
+        .message-time {
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .message-content {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .message-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .no-messages {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .no-messages i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+            color: #ddd;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            
+            .content {
+                margin-right: 60px;
+            }
+            
+            .logo h2, .nav-item span {
+                display: none;
+            }
+            
+            .nav-item {
+                text-align: center;
+                padding: 15px 0;
+            }
+            
+            .nav-item i {
+                margin: 0;
+                font-size: 20px;
+            }
+            
+            .message-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .message-actions {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الشريط الجانبي -->
+    <aside class="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-crown"></i> التحكم</h2>
+        </div>
+        
+        <nav class="nav">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>الرئيسية</span>
+            </a>
+            <a href="products.html" class="nav-item">
+                <i class="fas fa-box"></i>
+                <span>المنتجات</span>
+            </a>
+            <a href="categories.html" class="nav-item">
+                <i class="fas fa-folder"></i>
+                <span>الفئات</span>
+            </a>
+            <a href="orders.html" class="nav-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>الطلبات</span>
+            </a>
+            <a href="contact.html" class="nav-item active">
+                <i class="fas fa-envelope"></i>
+                <span>رسائل العملاء</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="content">
+        <!-- التنبيهات -->
+        <div id="alert-container"></div>
+        
+        <!-- الهيدر -->
+        <div class="header">
+            <h1><i class="fas fa-envelope"></i> رسائل العملاء</h1>
+            <div class="header-actions">
+                <a href="dashboard.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </a>
+                <button class="btn btn-success" onclick="markAllAsRead()">
+                    <i class="fas fa-check-double"></i> تعيين الكل كمقروء
+                </button>
+            </div>
+        </div>
+
+        <!-- قائمة الرسائل -->
+        <div id="messages-container" class="messages-container">
+            <!-- الرسائل تظهر هنا -->
+        </div>
+    </main>
+
+    <!-- مودال الرد على الرسالة -->
+    <div id="reply-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>الرد على الرسالة</h2>
+                <button class="close-modal" onclick="closeReplyModal()">×</button>
+            </div>
+            
+            <div id="message-info" style="margin-bottom: 20px;">
+                <!-- معلومات الرسالة تظهر هنا -->
+            </div>
+            
+            <div class="form-group">
+                <label for="reply-message">الرد</label>
+                <textarea id="reply-message" class="form-control" rows="6" placeholder="اكتب ردك هنا..."></textarea>
+            </div>
+            
+            <button class="btn btn-primary" onclick="sendReply()" style="width: 100%; margin-top: 20px;">
+                <i class="fas fa-paper-plane"></i> إرسال الرد
+            </button>
+        </div>
+    </div>
+
+    <script src="../js/database.js"></script>
+    <script>
+    // 1. التحقق من تسجيل الدخول
+    (function checkAuth() {
+        const user = SmartStoreDB.getCurrentUser();
+        
+        if (!user || user.role !== 'admin') {
+            alert('يجب تسجيل الدخول أولاً');
+            window.location.href = 'login.html';
+            return;
+        }
+    })();
+
+    let currentMessageId = null;
+
+    // 2. تحميل الرسائل
+    function loadMessages() {
+        const messages = SmartStoreDB.get('messages');
+        
+        // ترتيب تنازلي حسب التاريخ
+        messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
+        displayMessages(messages);
+    }
+
+    // 3. عرض الرسائل
+    function displayMessages(messages) {
+        const container = document.getElementById('messages-container');
+        
+        if (messages.length === 0) {
+            container.innerHTML = `
+                <div class="no-messages">
+                    <i class="fas fa-inbox"></i>
+                    <h3>لا توجد رسائل</h3>
+                    <p>لم تتلق أي رسائل من العملاء بعد</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = messages.map(message => `
+            <div class="message-card ${message.read ? '' : 'unread'}" id="message-${message.id}">
+                <div class="message-header">
+                    <div class="message-sender">
+                        <div class="sender-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="sender-info">
+                            <h3>${message.name}</h3>
+                            <small>
+                                <i class="fas fa-envelope"></i> ${message.email}
+                                ${message.phone ? ` | <i class="fas fa-phone"></i> ${message.phone}` : ''}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="message-time">
+                        ${new Date(message.createdAt).toLocaleString('ar-EG')}
+                    </div>
+                </div>
+                
+                <div class="message-content">
+                    ${message.message}
+                </div>
+                
+                <div class="message-actions">
+                    <button class="btn btn-primary" onclick="openReplyModal(${message.id})" style="padding: 8px 15px;">
+                        <i class="fas fa-reply"></i> رد
+                    </button>
+                    <button class="btn btn-secondary" onclick="markAsRead(${message.id})" style="padding: 8px 15px;">
+                        <i class="fas fa-check"></i> تعيين كمقروء
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteMessage(${message.id})" style="padding: 8px 15px;">
+                        <i class="fas fa-trash"></i> حذف
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 4. فتح مودال الرد
+    function openReplyModal(messageId) {
+        currentMessageId = messageId;
+        const messages = SmartStoreDB.get('messages');
+        const message = messages.find(m => m.id == messageId);
+        
+        if (!message) return;
+        
+        document.getElementById('message-info').innerHTML = `
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                <p><strong>من:</strong> ${message.name}</p>
+                <p><strong>البريد:</strong> ${message.email}</p>
+                ${message.phone ? `<p><strong>الهاتف:</strong> ${message.phone}</p>` : ''}
+                <p><strong>الرسالة:</strong></p>
+                <p style="background: white; padding: 10px; border-radius: 5px;">${message.message}</p>
+            </div>
+        `;
+        
+        document.getElementById('reply-message').value = '';
+        document.getElementById('reply-modal').style.display = 'flex';
+        
+        // تعيين الرسالة كمقروءة
+        markAsRead(messageId, false);
+    }
+
+    function closeReplyModal() {
+        document.getElementById('reply-modal').style.display = 'none';
+    }
+
+    // 5. إرسال رد
+    function sendReply() {
+        const reply = document.getElementById('reply-message').value.trim();
+        
+        if (!reply) {
+            showAlert('الرجاء كتابة رد', 'error');
+            return;
+        }
+        
+        const messages = SmartStoreDB.get('messages');
+        const message = messages.find(m => m.id == currentMessageId);
+        
+        if (!message) return;
+        
+        // في نظام حقيقي، هنا نرسل الإيميل
+        // ولكن هنا سنقوم فقط بتحديث حالة الرسالة
+        SmartStoreDB.update('messages', currentMessageId, {
+            read: true,
+            replied: true,
+            repliedAt: new Date().toISOString()
+        });
+        
+        showAlert('تم إرسال الرد بنجاح', 'success');
+        closeReplyModal();
+        loadMessages();
+    }
+
+    // 6. تعيين رسالة كمقروءة
+    function markAsRead(messageId, showAlert = true) {
+        const success = SmartStoreDB.update('messages', messageId, { read: true });
+        
+        if (success) {
+            const messageElement = document.getElementById(`message-${messageId}`);
+            if (messageElement) {
+                messageElement.classList.remove('unread');
+            }
+            
+            if (showAlert) {
+                showAlert('تم تعيين الرسالة كمقروءة', 'success');
+            }
+        }
+    }
+
+    // 7. تعيين جميع الرسائل كمقروءة
+    function markAllAsRead() {
+        const messages = SmartStoreDB.get('messages');
+        const unreadMessages = messages.filter(m => !m.read);
+        
+        unreadMessages.forEach(message => {
+            SmartStoreDB.update('messages', message.id, { read: true });
+        });
+        
+        // تحديث الواجهة
+        document.querySelectorAll('.message-card.unread').forEach(card => {
+            card.classList.remove('unread');
+        });
+        
+        showAlert(`تم تعيين ${unreadMessages.length} رسالة كمقروءة`, 'success');
+    }
+
+    // 8. حذف رسالة
+    function deleteMessage(messageId) {
+        if (!confirm('هل أنت متأكد من حذف هذه الرسالة؟')) {
+            return;
+        }
+        
+        const success = SmartStoreDB.delete('messages', messageId);
+        
+        if (success) {
+            const messageElement = document.getElementById(`message-${messageId}`);
+            if (messageElement) {
+                messageElement.remove();
+            }
+            
+            showAlert('تم حذف الرسالة بنجاح', 'success');
+        } else {
+            showAlert('خطأ في حذف الرسالة', 'error');
+        }
+    }
+
+    // 9. عرض التنبيهات
+    function showAlert(message, type = 'success') {
+        const container = document.getElementById('alert-container');
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type}`;
+        alert.innerHTML = `
+            <div>
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            </div>
+            <button onclick="this.parentElement.remove()" style="background: none; border: none; cursor: pointer; font-size: 20px;">×</button>
+        `;
+        
+        container.appendChild(alert);
+        
+        setTimeout(() => {
+            if (alert.parentElement) {
+                alert.remove();
+            }
+        }, 5000);
+    }
+
+    // 10. تهيئة الصفحة
+    document.addEventListener('DOMContentLoaded', function() {
+        loadMessages();
+        
+        // إغلاق المودال عند النقر خارج المحتوى
+        window.onclick = function(event) {
+            if (event.target.id === 'reply-modal') {
+                closeReplyModal();
+            }
+        };
+    });
+    </script>
+</body>
+</html>
