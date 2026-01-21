@@ -1,0 +1,25 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "إلكترونيات",
+      "icon": "fas fa-laptop"
+    },
+    {
+      "id": 2,
+      "name": "ملابس",
+      "icon": "fas fa-tshirt"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "منتج تجريبي 1",
+      "description": "وصف المنتج التجريبي",
+      "price": 100,
+      "image": "https://via.placeholder.com/300x200",
+      "categoryId": 1,
+      "stock": 10
+    }
+  ]
+}
