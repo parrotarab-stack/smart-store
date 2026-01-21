@@ -4,170 +4,270 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المتجر الذكي - الرئيسية</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         [x-cloak] { display: none !important; }
-        .category-btn.active {
-            background-color: #3b82f6;
-            color: white;
-        }
+        
+        /* تنسيقات إضافية */
         .product-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
         }
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #3b82f6;
         }
+        
         /* زر الإعدادات المتقدمة */
-        .reset-btn {
+        .reset-button {
             position: fixed;
             bottom: 20px;
-            right: 20px;
-            z-index: 1000;
+            left: 20px;
+            z-index: 9999;
+            background: #1f2937;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
         }
+        .reset-button:hover {
+            background: #374151;
+            transform: scale(1.1);
+        }
+        
         .reset-panel {
             position: fixed;
             bottom: 80px;
-            right: 20px;
-            z-index: 999;
+            left: 20px;
+            z-index: 9998;
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            padding: 0;
+            overflow: hidden;
             display: none;
         }
+        
         .reset-panel.show {
             display: block;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .reset-header {
+            background: #dc2626;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .reset-option {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .reset-option:hover {
+            background: #f3f4f6;
+        }
+        
+        .reset-option.danger {
+            color: #dc2626;
+        }
+        
+        .reset-option.warning {
+            color: #d97706;
+        }
+        
+        .reset-option.success {
+            color: #059669;
+        }
+        
+        .reset-option i {
+            margin-left: 10px;
         }
     </style>
 </head>
-<body class="bg-gray-50" x-data="app()" x-init="init()">
+<body class="bg-gray-50" x-data="storeApp()" x-init="init()" x-cloak>
     
     <!-- الهيدر -->
-    <header class="bg-white shadow-md sticky top-0 z-40">
-        <div class="container mx-auto px-4 py-4">
+    <header class="bg-white shadow sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-4 space-x-reverse">
-                    <button @click="openSidebar()" class="text-2xl text-gray-700">
+                <div class="flex items-center gap-4">
+                    <button @click="openMenu = true" class="text-2xl text-gray-700">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h1 class="text-2xl font-bold text-blue-600" x-text="settings.storeName || 'المتجر الذكي'"></h1>
+                    <h1 class="text-xl font-bold text-blue-600" x-text="storeSettings.storeName || 'المتجر الذكي'"></h1>
                 </div>
-                <div class="flex items-center space-x-4 space-x-reverse">
-                    <button @click="openCart()" class="relative">
-                        <i class="fas fa-shopping-cart text-2xl text-gray-700"></i>
-                        <span x-show="cartCount > 0" x-text="cartCount" 
-                              class="absolute -top-2 -left-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"></span>
+                
+                <div class="flex items-center gap-4">
+                    <button @click="openCart = true" class="relative">
+                        <i class="fas fa-shopping-cart text-xl text-gray-700"></i>
+                        <span x-show="getCartCount() > 0" x-text="getCartCount()" 
+                              class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"></span>
                     </button>
-                    <button @click="openSearch()">
-                        <i class="fas fa-search text-xl text-gray-700"></i>
+                    
+                    <button @click="openSearch = true">
+                        <i class="fas fa-search text-lg text-gray-700"></i>
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- الشريط الجانبي -->
-    <div x-show="sidebarOpen" @click.away="sidebarOpen = false" 
-         class="fixed inset-0 bg-black bg-opacity-50 z-40" style="display: none;">
+    <!-- القائمة الجانبية -->
+    <div x-show="openMenu" @click.away="openMenu = false" class="fixed inset-0 z-40" style="display: none;">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
         <div class="absolute right-0 top-0 h-full w-64 bg-white shadow-lg">
             <div class="p-4">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold">القائمة</h2>
-                    <button @click="sidebarOpen = false" class="text-2xl">&times;</button>
-                </div>
-                <nav class="space-y-3">
-                    <a href="index.html" class="block py-2 px-4 bg-blue-50 text-blue-600 rounded">
-                        <i class="fas fa-home ml-2"></i> الرئيسية
-                    </a>
-                    <a href="categories.html" class="block py-2 px-4 hover:bg-gray-100 rounded">
-                        <i class="fas fa-list ml-2"></i> الفئات
-                    </a>
-                    <a href="products.html" class="block py-2 px-4 hover:bg-gray-100 rounded">
-                        <i class="fas fa-box ml-2"></i> المنتجات
-                    </a>
-                    <a href="orders.html" class="block py-2 px-4 hover:bg-gray-100 rounded">
-                        <i class="fas fa-shopping-bag ml-2"></i> الطلبات
-                    </a>
-                    <a href="settings.html" class="block py-2 px-4 hover:bg-gray-100 rounded">
-                        <i class="fas fa-cog ml-2"></i> الإعدادات
-                    </a>
-                    <a href="customers.html" class="block py-2 px-4 hover:bg-gray-100 rounded">
-                        <i class="fas fa-users ml-2"></i> العملاء
-                    </a>
-                </nav>
-            </div>
-        </div>
-    </div>
-
-    <!-- البحث -->
-    <div x-show="searchOpen" @click.away="searchOpen = false" 
-         class="fixed inset-0 bg-black bg-opacity-50 z-40" style="display: none;">
-        <div class="absolute top-0 left-0 right-0 bg-white p-4 shadow-lg">
-            <div class="container mx-auto">
-                <div class="flex items-center">
-                    <input type="text" x-model="searchQuery" @input="searchProducts()"
-                           placeholder="ابحث عن منتج..." 
-                           class="flex-1 p-3 border rounded-lg text-lg">
-                    <button @click="searchOpen = false" class="mr-4 text-2xl">&times;</button>
-                </div>
-                <div x-show="searchResults.length > 0" class="mt-4 bg-white rounded-lg shadow max-h-96 overflow-y-auto">
-                    <div x-html="searchResultsHTML"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- السلة -->
-    <div x-show="cartOpen" @click.away="cartOpen = false" 
-         class="fixed inset-0 bg-black bg-opacity-50 z-40" style="display: none;">
-        <div class="absolute left-0 top-0 h-full w-64 md:w-80 bg-white shadow-lg">
-            <div class="p-4 h-full flex flex-col">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold">سلة التسوق</h2>
-                    <button @click="cartOpen = false" class="text-2xl">&times;</button>
+                    <h2 class="text-lg font-bold">القائمة</h2>
+                    <button @click="openMenu = false" class="text-2xl">&times;</button>
                 </div>
                 
-                <div class="flex-1 overflow-y-auto">
+                <nav class="space-y-2">
+                    <a href="index.html" class="block py-2 px-3 bg-blue-50 text-blue-600 rounded-lg">
+                        <i class="fas fa-home ml-2"></i> الرئيسية
+                    </a>
+                    <a href="categories.html" class="block py-2 px-3 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-list ml-2"></i> الفئات
+                    </a>
+                    <a href="products.html" class="block py-2 px-3 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-box ml-2"></i> المنتجات
+                    </a>
+                    <a href="orders.html" class="block py-2 px-3 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-shopping-bag ml-2"></i> الطلبات
+                    </a>
+                    <a href="customers.html" class="block py-2 px-3 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-users ml-2"></i> العملاء
+                    </a>
+                    <a href="settings.html" class="block py-2 px-3 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-cog ml-2"></i> الإعدادات
+                    </a>
+                </nav>
+                
+                <div class="mt-8 pt-6 border-t">
+                    <div class="text-center text-sm text-gray-500">
+                        <p>المتجر الذكي v1.0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- شاشة البحث -->
+    <div x-show="openSearch" @click.away="openSearch = false" class="fixed inset-0 z-40" style="display: none;">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="absolute top-0 left-0 right-0 bg-white p-4">
+            <div class="container mx-auto">
+                <div class="flex items-center">
+                    <div class="flex-1 relative">
+                        <input type="text" x-model="searchTerm" @input="performSearch()"
+                               placeholder="ابحث عن منتج أو فئة..."
+                               class="w-full p-3 pl-12 border rounded-lg text-lg">
+                        <i class="fas fa-search absolute right-4 top-4 text-gray-400"></i>
+                    </div>
+                    <button @click="openSearch = false" class="mr-4 text-2xl">&times;</button>
+                </div>
+                
+                <div x-show="searchResults.length > 0" class="mt-4 bg-white rounded-lg shadow-lg max-h-96 overflow-y-auto">
+                    <template x-for="item in searchResults" :key="item.id">
+                        <a href="#" @click.prevent="selectSearchItem(item)" 
+                           class="block p-4 border-b hover:bg-gray-50">
+                            <div class="flex items-center">
+                                <img :src="item.image || 'https://via.placeholder.com/50'" 
+                                     :alt="item.name"
+                                     class="w-12 h-12 object-cover rounded ml-3">
+                                <div>
+                                    <h4 class="font-semibold" x-text="item.name"></h4>
+                                    <p class="text-sm text-gray-600" x-text="formatPrice(item.price)"></p>
+                                </div>
+                            </div>
+                        </a>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- سلة التسوق -->
+    <div x-show="openCart" @click.away="openCart = false" class="fixed inset-0 z-40" style="display: none;">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="absolute left-0 top-0 h-full w-80 bg-white">
+            <div class="h-full flex flex-col">
+                <div class="p-4 border-b">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-lg font-bold">سلة التسوق</h2>
+                        <button @click="openCart = false" class="text-2xl">&times;</button>
+                    </div>
+                </div>
+                
+                <div class="flex-1 overflow-y-auto p-4">
                     <template x-for="item in cart" :key="item.id">
-                        <div class="flex items-center p-3 border-b">
+                        <div class="flex items-center p-3 mb-3 bg-gray-50 rounded-lg">
                             <img :src="item.image" :alt="item.name" 
                                  class="w-16 h-16 object-cover rounded ml-3">
                             <div class="flex-1">
                                 <h3 class="font-semibold" x-text="item.name"></h3>
-                                <p class="text-gray-600" x-text="formatPrice(item.price)"></p>
+                                <p class="text-gray-600 text-sm" x-text="formatPrice(item.price)"></p>
                                 <div class="flex items-center mt-2">
-                                    <button @click="updateQuantity(item, -1)" 
-                                            class="bg-gray-200 w-8 h-8 rounded">-</button>
+                                    <button @click="updateCartItem(item.id, -1)" 
+                                            class="w-8 h-8 bg-gray-200 rounded">-</button>
                                     <span class="mx-2" x-text="item.quantity"></span>
-                                    <button @click="updateQuantity(item, 1)" 
-                                            class="bg-gray-200 w-8 h-8 rounded">+</button>
+                                    <button @click="updateCartItem(item.id, 1)" 
+                                            class="w-8 h-8 bg-gray-200 rounded">+</button>
                                 </div>
                             </div>
-                            <button @click="removeFromCart(item)" 
-                                    class="text-red-500">
+                            <button @click="removeFromCart(item.id)" 
+                                    class="text-red-500 hover:text-red-700">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </template>
                     
-                    <div x-show="cart.length === 0" class="text-center py-8 text-gray-500">
-                        <i class="fas fa-shopping-cart text-4xl mb-3"></i>
-                        <p>السلة فارغة</p>
+                    <div x-show="cart.length === 0" class="text-center py-10">
+                        <i class="fas fa-shopping-cart text-4xl text-gray-300 mb-3"></i>
+                        <p class="text-gray-500">سلة التسوق فارغة</p>
                     </div>
                 </div>
                 
-                <div class="border-t pt-4">
-                    <div class="flex justify-between text-lg font-bold mb-4">
-                        <span>المجموع:</span>
-                        <span x-text="formatPrice(cartTotal)"></span>
+                <div class="p-4 border-t">
+                    <div class="flex justify-between mb-4">
+                        <span class="font-bold">المجموع:</span>
+                        <span class="font-bold text-lg" x-text="formatPrice(getCartTotal())"></span>
                     </div>
                     <button @click="checkout()" 
                             :disabled="cart.length === 0"
-                            class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold disabled:bg-gray-300">
-                        اتمام الشراء
+                            class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-300">
+                        إتمام الشراء
                     </button>
                 </div>
             </div>
@@ -177,66 +277,79 @@
     <!-- المحتوى الرئيسي -->
     <main class="container mx-auto px-4 py-6">
         <!-- الفئات -->
-        <div class="mb-8">
+        <section class="mb-8">
             <h2 class="text-xl font-bold mb-4">فئات المنتجات</h2>
-            <div class="flex overflow-x-auto space-x-3 space-x-reverse pb-2">
-                <button @click="selectCategory(null)" 
+            <div class="flex gap-3 overflow-x-auto pb-3">
+                <button @click="selectedCategory = null" 
                         :class="{'bg-blue-500 text-white': selectedCategory === null}"
                         class="px-4 py-2 bg-gray-200 rounded-lg whitespace-nowrap">
-                    الكل
+                    جميع المنتجات
                 </button>
+                
                 <template x-for="category in categories" :key="category.id">
-                    <button @click="selectCategory(category.id)" 
+                    <button @click="selectedCategory = category.id" 
                             :class="{'bg-blue-500 text-white': selectedCategory === category.id}"
                             class="px-4 py-2 bg-gray-200 rounded-lg whitespace-nowrap">
+                        <i :class="category.icon || 'fas fa-folder'" class="ml-2"></i>
                         <span x-text="category.name"></span>
                         <span class="mr-2 text-xs bg-gray-300 px-2 py-1 rounded" 
-                              x-text="categoryCount(category.id)"></span>
+                              x-text="countProductsInCategory(category.id)"></span>
                     </button>
                 </template>
             </div>
-        </div>
+        </section>
 
         <!-- المنتجات -->
-        <div>
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold">المنتجات</h2>
-                <div class="text-gray-600" x-text="`${filteredProducts.length} منتج`"></div>
+        <section>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">المنتجات المتاحة</h2>
+                <span class="text-gray-600" x-text="`${filteredProducts.length} منتج`"></span>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <template x-for="product in filteredProducts" :key="product.id">
-                    <div class="product-card bg-white rounded-lg shadow overflow-hidden">
+                    <div class="product-card bg-white rounded-xl shadow overflow-hidden">
                         <div class="relative">
-                            <img :src="product.image" :alt="product.name" 
+                            <img :src="product.image || 'https://via.placeholder.com/300x200'" 
+                                 :alt="product.name"
                                  class="w-full h-48 object-cover">
-                            <div class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                                <span x-text="product.discount || '0'"></span>% خصم
+                            
+                            <div x-show="product.discount" 
+                                 class="absolute top-3 left-3 bg-red-500 text-white text-xs px-3 py-1 rounded-full">
+                                خصم <span x-text="product.discount"></span>%
+                            </div>
+                            
+                            <div x-show="product.stock <= 5 && product.stock > 0" 
+                                 class="absolute top-3 right-3 bg-yellow-500 text-white text-xs px-3 py-1 rounded-full">
+                                كميات محدودة
                             </div>
                         </div>
                         
                         <div class="p-4">
                             <h3 class="font-bold text-lg mb-2" x-text="product.name"></h3>
-                            <p class="text-gray-600 text-sm mb-3" x-text="product.description"></p>
+                            <p class="text-gray-600 text-sm mb-3" x-text="product.description || 'منتج مميز بجودة عالية'"></p>
                             
-                            <div class="flex justify-between items-center mb-3">
+                            <div class="flex justify-between items-center mb-4">
                                 <div>
                                     <span class="text-xl font-bold text-blue-600" 
-                                          x-text="formatPrice(product.price)"></span>
+                                          x-text="formatPrice(calculatePrice(product))"></span>
                                     <span x-show="product.oldPrice" 
                                           class="text-gray-400 line-through text-sm mr-2"
                                           x-text="formatPrice(product.oldPrice)"></span>
                                 </div>
-                                <span class="text-sm text-gray-500">
+                                
+                                <div class="text-sm text-gray-500">
                                     <i class="fas fa-box ml-1"></i>
-                                    <span x-text="product.stock"></span>
-                                </span>
+                                    <span x-text="product.stock || 0"></span> متوفر
+                                </div>
                             </div>
                             
                             <button @click="addToCart(product)" 
-                                    :disabled="product.stock === 0"
-                                    class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-semibold disabled:bg-gray-300">
-                                <span x-text="product.stock === 0 ? 'نفذت الكمية' : 'أضف إلى السلة'"></span>
+                                    :disabled="!product.stock || product.stock === 0"
+                                    :class="{'bg-gray-300 cursor-not-allowed': !product.stock || product.stock === 0, 
+                                             'bg-blue-500 hover:bg-blue-600': product.stock && product.stock > 0}"
+                                    class="w-full text-white py-2 rounded-lg font-semibold transition">
+                                <span x-text="(!product.stock || product.stock === 0) ? 'نفذت الكمية' : 'أضف إلى السلة'"></span>
                             </button>
                         </div>
                     </div>
@@ -245,123 +358,106 @@
             
             <div x-show="filteredProducts.length === 0" class="text-center py-12">
                 <i class="fas fa-box-open text-5xl text-gray-300 mb-4"></i>
-                <p class="text-gray-500">لا توجد منتجات في هذه الفئة</p>
+                <p class="text-gray-500 text-lg">لا توجد منتجات متاحة</p>
+                <p class="text-gray-400 mt-2">جاري العمل على إضافة منتجات جديدة</p>
             </div>
-        </div>
+        </section>
     </main>
 
     <!-- الفوتر -->
-    <footer class="bg-gray-800 text-white py-8 mt-12">
-        <div class="container mx-auto px-4">
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="container mx-auto px-4 py-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <h2 class="text-2xl font-bold" x-text="settings.storeName || 'المتجر الذكي'"></h2>
-                    <p class="text-gray-400 mt-2" x-text="settings.storeDescription || 'أفضل متجر للتسوق الإلكتروني'"></p>
+                <div class="mb-6 md:mb-0 text-center md:text-right">
+                    <h2 class="text-2xl font-bold mb-2" x-text="storeSettings.storeName || 'المتجر الذكي'"></h2>
+                    <p class="text-gray-300" x-text="storeSettings.storeDescription || 'متجرك الإلكتروني الموثوق'"></p>
                 </div>
                 
-                <div class="flex space-x-6 space-x-reverse">
-                    <a href="#" class="text-gray-400 hover:text-white">
-                        <i class="fab fa-facebook text-xl"></i>
+                <div class="flex gap-4">
+                    <a href="#" class="text-gray-300 hover:text-white text-xl">
+                        <i class="fab fa-facebook"></i>
                     </a>
-                    <a href="#" class="text-gray-400 hover:text-white">
-                        <i class="fab fa-twitter text-xl"></i>
+                    <a href="#" class="text-gray-300 hover:text-white text-xl">
+                        <i class="fab fa-twitter"></i>
                     </a>
-                    <a href="#" class="text-gray-400 hover:text-white">
-                        <i class="fab fa-instagram text-xl"></i>
+                    <a href="#" class="text-gray-300 hover:text-white text-xl">
+                        <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="text-gray-400 hover:text-white">
-                        <i class="fab fa-whatsapp text-xl"></i>
+                    <a href="#" class="text-gray-300 hover:text-white text-xl">
+                        <i class="fab fa-whatsapp"></i>
                     </a>
                 </div>
             </div>
             
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>جميع الحقوق محفوظة © <span x-text="new Date().getFullYear()"></span> - <span x-text="settings.storeName || 'المتجر الذكي'"></span></p>
-                <p class="mt-2" x-text="settings.storeAddress || ''"></p>
-                <p x-text="settings.storePhone || ''"></p>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400">
+                    © <span x-text="new Date().getFullYear()"></span> 
+                    <span x-text="storeSettings.storeName || 'المتجر الذكي'"></span>. 
+                    جميع الحقوق محفوظة
+                </p>
+                <div class="mt-2 text-gray-500 text-sm">
+                    <p x-text="storeSettings.storeAddress || ''"></p>
+                    <p x-text="storeSettings.storePhone || ''"></p>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- زر إعادة التعيين (مهم جداً) -->
-    <div class="reset-btn" x-data="{ resetOpen: false }">
-        <!-- زر الإعدادات المتقدمة -->
-        <button 
-            @click="resetOpen = !resetOpen"
-            class="bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-900 transition-all duration-300"
-            title="الإعدادات المتقدمة">
+    <!-- زر الإعدادات المتقدمة (مهم جداً) -->
+    <div x-data="{ resetPanelOpen: false }">
+        <!-- زر الفتح -->
+        <div class="reset-button" @click="resetPanelOpen = !resetPanelOpen">
             ⚙️
-        </button>
+        </div>
         
-        <!-- نافذة الإعدادات -->
-        <div x-show="resetOpen" 
-             @click.away="resetOpen = false"
-             class="reset-panel p-4 w-72"
-             style="display: none;">
-            <h3 class="font-bold text-lg mb-3 text-red-600">⚙️ الإعدادات المتقدمة</h3>
-            
-            <div class="space-y-2">
-                <button 
-                    @click="
-                        if(confirm('⚠️ هل أنت متأكد من مسح جميع البيانات المحلية؟')) {
-                            localStorage.clear();
-                            alert('✅ تم مسح جميع البيانات بنجاح');
-                            location.reload();
-                        }
-                    "
-                    class="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded text-right flex items-center justify-between">
-                    <span>🗑️ مسح جميع البيانات</span>
-                    <i class="fas fa-trash"></i>
-                </button>
-                
-                <button 
-                    @click="
-                        if(confirm('هل تريد إعادة تعيين المنتجات والفئات؟')) {
-                            localStorage.removeItem('products');
-                            localStorage.removeItem('categories');
-                            alert('تم إعادة تعيين المنتجات');
-                            location.reload();
-                        }
-                    "
-                    class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded text-right flex items-center justify-between">
-                    <span>🔄 إعادة تعيين المنتجات</span>
-                    <i class="fas fa-sync-alt"></i>
-                </button>
-                
-                <button 
-                    @click="
-                        if(confirm('هل تريد إعادة تعيين الإعدادات؟')) {
-                            localStorage.removeItem('settings');
-                            alert('تم إعادة تعيين الإعدادات');
-                            location.reload();
-                        }
-                    "
-                    class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded text-right flex items-center justify-between">
-                    <span>⚙️ إعادة تعيين الإعدادات</span>
-                    <i class="fas fa-cog"></i>
-                </button>
-                
-                <button 
-                    @click="
-                        localStorage.setItem('forceReload', 'true');
-                        alert('سيتم تحميل البيانات من السيرفر عند إعادة التحميل');
-                        location.reload();
-                    "
-                    class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-right flex items-center justify-between">
-                    <span>📥 تحميل من السيرفر</span>
-                    <i class="fas fa-download"></i>
-                </button>
+        <!-- لوحة التحكم -->
+        <div class="reset-panel" :class="{ 'show': resetPanelOpen }" @click.away="resetPanelOpen = false">
+            <div class="reset-header">
+                <i class="fas fa-tools ml-2"></i>
+                أدوات المطور
             </div>
             
-            <div class="mt-4 p-3 bg-gray-100 rounded text-sm text-gray-700">
+            <div class="py-2">
+                <div class="reset-option danger" 
+                     @click="if(confirm('⚠️ هل تريد مسح جميع البيانات المحفوظة في متصفحك؟')) { localStorage.clear(); alert('✅ تم المسح بنجاح'); location.reload(); }">
+                    <span>🗑️ مسح جميع البيانات المحلية</span>
+                    <i class="fas fa-trash"></i>
+                </div>
+                
+                <div class="reset-option warning" 
+                     @click="if(confirm('هل تريد إعادة تعيين المنتجات والفئات؟')) { localStorage.removeItem('products'); localStorage.removeItem('categories'); alert('🔄 تم التعيين'); location.reload(); }">
+                    <span>🔄 إعادة تعيين المنتجات</span>
+                    <i class="fas fa-boxes"></i>
+                </div>
+                
+                <div class="reset-option" 
+                     @click="if(confirm('هل تريد إعادة تعيين الإعدادات؟')) { localStorage.removeItem('settings'); alert('⚙️ تم التعيين'); location.reload(); }">
+                    <span>⚙️ إعادة تعيين الإعدادات</span>
+                    <i class="fas fa-cog"></i>
+                </div>
+                
+                <div class="reset-option success" 
+                     @click="localStorage.setItem('forceReload', 'true'); alert('📥 سيتم تحميل البيانات من السيرفر'); location.reload();">
+                    <span>📥 تحميل البيانات من السيرفر</span>
+                    <i class="fas fa-download"></i>
+                </div>
+                
+                <div class="reset-option" 
+                     @click="resetPanelOpen = false; window.open('settings.html', '_blank');">
+                    <span>🔧 فتح صفحة الإعدادات</span>
+                    <i class="fas fa-external-link-alt"></i>
+                </div>
+            </div>
+            
+            <div class="p-3 bg-gray-50 text-xs text-gray-600">
                 <p class="font-bold mb-1">💡 ملاحظة:</p>
-                <p>هذه الأدوات تمسح البيانات من <strong>متصفحك فقط</strong>، وليس من السيرفر.</p>
-                <p class="mt-2">للتأكد من ظهور التغييرات الجديدة، استخدم زر <strong>"تحميل من السيرفر"</strong>.</p>
+                <p>هذه الأدوات تؤثر فقط على بيانات متصفحك المحلية وليس على السيرفر.</p>
+                <p class="mt-1">لرؤية التغييرات الجديدة استخدم "تحميل البيانات من السيرفر".</p>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript -->
-    <script src="assets/js/main.js"></script>
+    <!-- الملفات JavaScript -->
+    <script src="js/main.js"></script>
 </body>
 </html>
