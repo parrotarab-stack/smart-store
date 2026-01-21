@@ -4,69 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المتجر الذكي - الرئيسية</title>
+    <!-- CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine JS -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Styles -->
     <style>
         [x-cloak] { display: none !important; }
-        .category-btn.active {
-            background-color: #3b82f6;
-            color: white;
-        }
-        .product-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        
+        .category-btn {
+            transition: all 0.3s ease;
         }
         
-        /* زر الإعدادات المتقدمة - تمت إضافته فقط */
-        .admin-tools-btn {
+        .category-btn.active {
+            background-color: #3b82f6 !important;
+            color: white !important;
+            transform: scale(1.05);
+        }
+        
+        .product-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #3b82f6;
+        }
+        
+        .cart-badge {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Quick Admin Tools */
+        .quick-tools {
             position: fixed;
             bottom: 20px;
             left: 20px;
             z-index: 1000;
+        }
+        
+        .quick-tools-btn {
             width: 50px;
             height: 50px;
-            border-radius: 50%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
         }
         
-        .admin-tools-btn:hover {
+        .quick-tools-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
         
-        .admin-tools-panel {
-            position: fixed;
-            bottom: 80px;
-            left: 20px;
-            z-index: 999;
-            width: 280px;
+        .tools-panel {
+            position: absolute;
+            bottom: 60px;
+            left: 0;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            padding: 0;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 250px;
             overflow: hidden;
             display: none;
         }
         
-        .admin-tools-panel.show {
+        .tools-panel.show {
             display: block;
-            animation: slideInUp 0.3s ease;
+            animation: slideUp 0.3s ease;
         }
         
-        @keyframes slideInUp {
+        @keyframes slideUp {
             from {
                 opacity: 0;
                 transform: translateY(20px);
@@ -77,27 +103,23 @@
             }
         }
         
-        .tools-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 16px;
-        }
-        
         .tool-item {
             padding: 12px 15px;
-            border-bottom: 1px solid #f1f1f1;
+            border-bottom: 1px solid #f1f5f9;
             cursor: pointer;
             transition: background 0.2s;
             display: flex;
             align-items: center;
-            justify-content: space-between;
         }
         
         .tool-item:hover {
-            background: #f8f9fa;
+            background: #f8fafc;
+        }
+        
+        .tool-item i {
+            margin-left: 10px;
+            width: 20px;
+            text-align: center;
         }
         
         .tool-item.danger {
@@ -108,152 +130,154 @@
             color: #d97706;
         }
         
-        .tool-item.info {
-            color: #2563eb;
-        }
-        
         .tool-item.success {
             color: #059669;
         }
         
-        .tool-item i {
-            margin-left: 10px;
-            font-size: 14px;
-        }
-        
-        .tool-note {
-            padding: 10px 15px;
-            background: #f8f9fa;
-            font-size: 12px;
-            color: #6b7280;
-            line-height: 1.4;
+        .tool-info {
+            padding: 10px;
+            background: #f1f5f9;
+            font-size: 11px;
+            color: #64748b;
+            text-align: center;
         }
     </style>
 </head>
-<body class="bg-gray-50" x-data="app()" x-init="init()">
+<body class="bg-gray-50" x-data="store()" x-init="init()">
     
-    <!-- الهيدر - كما هو -->
-    <header class="bg-white shadow-md sticky top-0 z-40">
-        <div class="container mx-auto px-4 py-4">
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-4 space-x-reverse">
-                    <button @click="openSidebar()" class="text-2xl text-gray-700">
+                    <button @click="sidebarOpen = true" class="text-xl">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h1 class="text-2xl font-bold text-blue-600" x-text="settings.storeName || 'المتجر الذكي'"></h1>
+                    <h1 class="text-xl font-bold text-blue-600">
+                        <span x-text="settings.storeName || 'المتجر الذكي'"></span>
+                    </h1>
                 </div>
                 <div class="flex items-center space-x-4 space-x-reverse">
-                    <button @click="openCart()" class="relative">
-                        <i class="fas fa-shopping-cart text-2xl text-gray-700"></i>
-                        <span x-show="cartCount > 0" x-text="cartCount" 
-                              class="absolute -top-2 -left-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"></span>
+                    <button @click="cartOpen = true" class="relative">
+                        <i class="fas fa-shopping-cart text-lg"></i>
+                        <span x-show="cart.length > 0" x-text="cart.reduce((sum, item) => sum + item.quantity, 0)" 
+                              class="cart-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"></span>
                     </button>
-                    <button @click="openSearch()">
-                        <i class="fas fa-search text-xl text-gray-700"></i>
+                    <button @click="searchOpen = true">
+                        <i class="fas fa-search"></i>
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- الشريط الجانبي - كما هو -->
-    <div x-show="sidebarOpen" @click.away="sidebarOpen = false" 
-         class="fixed inset-0 bg-black bg-opacity-50 z-40" style="display: none;">
-        <div class="absolute right-0 top-0 h-full w-64 bg-white shadow-lg">
+    <!-- Sidebar Menu -->
+    <div x-show="sidebarOpen" @click.away="sidebarOpen = false" class="fixed inset-0 z-40" style="display: none;">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="absolute right-0 top-0 h-full w-64 bg-white">
             <div class="p-4">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold">القائمة</h2>
-                    <button @click="sidebarOpen = false" class="text-2xl">&times;</button>
+                    <h2 class="text-lg font-bold">القائمة</h2>
+                    <button @click="sidebarOpen = false" class="text-xl">&times;</button>
                 </div>
-                <nav class="space-y-3">
-                    <a href="index.html" class="block py-2 px-4 bg-blue-50 text-blue-600 rounded">
-                        <i class="fas fa-home ml-2"></i> الرئيسية
+                <nav class="space-y-2">
+                    <a href="index.html" class="flex items-center py-2 px-3 bg-blue-50 text-blue-600 rounded-lg">
+                        <i class="fas fa-home ml-2"></i>
+                        <span>الرئيسية</span>
                     </a>
-                    <a href="categories.html" class="block py-2 px-4 hover:bg-gray-100 rounded">
-                        <i class="fas fa-list ml-2"></i> الفئات
+                    <a href="categories.html" class="flex items-center py-2 px-3 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-list ml-2"></i>
+                        <span>الفئات</span>
                     </a>
-                    <a href="products.html" class="block py-2 px-4 hover:bg-gray-100 rounded">
-                        <i class="fas fa-box ml-2"></i> المنتجات
+                    <a href="products.html" class="flex items-center py-2 px-3 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-box ml-2"></i>
+                        <span>المنتجات</span>
                     </a>
-                    <a href="orders.html" class="block py-2 px-4 hover:bg-gray-100 rounded">
-                        <i class="fas fa-shopping-bag ml-2"></i> الطلبات
+                    <a href="orders.html" class="flex items-center py-2 px-3 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-shopping-bag ml-2"></i>
+                        <span>الطلبات</span>
                     </a>
-                    <a href="settings.html" class="block py-2 px-4 hover:bg-gray-100 rounded">
-                        <i class="fas fa-cog ml-2"></i> الإعدادات
+                    <a href="customers.html" class="flex items-center py-2 px-3 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-users ml-2"></i>
+                        <span>العملاء</span>
                     </a>
-                    <a href="customers.html" class="block py-2 px-4 hover:bg-gray-100 rounded">
-                        <i class="fas fa-users ml-2"></i> العملاء
+                    <a href="settings.html" class="flex items-center py-2 px-3 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-cog ml-2"></i>
+                        <span>الإعدادات</span>
                     </a>
                 </nav>
             </div>
         </div>
     </div>
 
-    <!-- البحث - كما هو -->
-    <div x-show="searchOpen" @click.away="searchOpen = false" 
-         class="fixed inset-0 bg-black bg-opacity-50 z-40" style="display: none;">
-        <div class="absolute top-0 left-0 right-0 bg-white p-4 shadow-lg">
+    <!-- Search Modal -->
+    <div x-show="searchOpen" @click.away="searchOpen = false" class="fixed inset-0 z-40" style="display: none;">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="absolute top-0 left-0 right-0 bg-white p-4">
             <div class="container mx-auto">
                 <div class="flex items-center">
                     <input type="text" x-model="searchQuery" @input="searchProducts()"
-                           placeholder="ابحث عن منتج..." 
-                           class="flex-1 p-3 border rounded-lg text-lg">
-                    <button @click="searchOpen = false" class="mr-4 text-2xl">&times;</button>
+                           placeholder="اكتب للبحث عن منتج..."
+                           class="flex-1 p-3 border rounded-lg">
+                    <button @click="searchOpen = false" class="mr-3 text-xl">&times;</button>
                 </div>
-                <div x-show="searchResults.length > 0" class="mt-4 bg-white rounded-lg shadow max-h-96 overflow-y-auto">
-                    <div x-html="searchResultsHTML"></div>
+                <div x-show="searchResults.length > 0" class="mt-3 bg-white rounded-lg shadow-lg max-h-80 overflow-y-auto">
+                    <template x-for="product in searchResults" :key="product.id">
+                        <a href="#" @click.prevent="addToCart(product); searchOpen = false;" 
+                           class="flex items-center p-3 border-b hover:bg-gray-50">
+                            <img :src="product.image" :alt="product.name" class="w-12 h-12 object-cover rounded ml-3">
+                            <div class="flex-1">
+                                <h4 class="font-semibold" x-text="product.name"></h4>
+                                <p class="text-sm text-gray-600" x-text="formatPrice(product.price)"></p>
+                            </div>
+                        </a>
+                    </template>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- السلة - كما هو -->
-    <div x-show="cartOpen" @click.away="cartOpen = false" 
-         class="fixed inset-0 bg-black bg-opacity-50 z-40" style="display: none;">
-        <div class="absolute left-0 top-0 h-full w-64 md:w-80 bg-white shadow-lg">
-            <div class="p-4 h-full flex flex-col">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold">سلة التسوق</h2>
-                    <button @click="cartOpen = false" class="text-2xl">&times;</button>
+    <!-- Cart Sidebar -->
+    <div x-show="cartOpen" @click.away="cartOpen = false" class="fixed inset-0 z-40" style="display: none;">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="absolute left-0 top-0 h-full w-80 bg-white">
+            <div class="h-full flex flex-col">
+                <div class="p-4 border-b">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-lg font-bold">سلة التسوق</h2>
+                        <button @click="cartOpen = false" class="text-xl">&times;</button>
+                    </div>
                 </div>
-                
-                <div class="flex-1 overflow-y-auto">
+                <div class="flex-1 overflow-y-auto p-4">
                     <template x-for="item in cart" :key="item.id">
-                        <div class="flex items-center p-3 border-b">
-                            <img :src="item.image" :alt="item.name" 
-                                 class="w-16 h-16 object-cover rounded ml-3">
+                        <div class="flex items-center p-3 mb-3 bg-gray-50 rounded-lg">
+                            <img :src="item.image" :alt="item.name" class="w-16 h-16 object-cover rounded ml-3">
                             <div class="flex-1">
                                 <h3 class="font-semibold" x-text="item.name"></h3>
-                                <p class="text-gray-600" x-text="formatPrice(item.price)"></p>
+                                <p class="text-gray-600 text-sm" x-text="formatPrice(item.price)"></p>
                                 <div class="flex items-center mt-2">
-                                    <button @click="updateQuantity(item, -1)" 
-                                            class="bg-gray-200 w-8 h-8 rounded">-</button>
+                                    <button @click="updateCart(item.id, -1)" class="w-8 h-8 bg-gray-200 rounded">-</button>
                                     <span class="mx-2" x-text="item.quantity"></span>
-                                    <button @click="updateQuantity(item, 1)" 
-                                            class="bg-gray-200 w-8 h-8 rounded">+</button>
+                                    <button @click="updateCart(item.id, 1)" class="w-8 h-8 bg-gray-200 rounded">+</button>
                                 </div>
                             </div>
-                            <button @click="removeFromCart(item)" 
-                                    class="text-red-500">
+                            <button @click="removeFromCart(item.id)" class="text-red-500 hover:text-red-700">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </template>
-                    
-                    <div x-show="cart.length === 0" class="text-center py-8 text-gray-500">
+                    <div x-show="cart.length === 0" class="text-center py-10 text-gray-500">
                         <i class="fas fa-shopping-cart text-4xl mb-3"></i>
-                        <p>السلة فارغة</p>
+                        <p>سلة التسوق فارغة</p>
                     </div>
                 </div>
-                
-                <div class="border-t pt-4">
-                    <div class="flex justify-between text-lg font-bold mb-4">
-                        <span>المجموع:</span>
-                        <span x-text="formatPrice(cartTotal)"></span>
+                <div class="p-4 border-t">
+                    <div class="flex justify-between mb-3">
+                        <span class="font-semibold">المجموع:</span>
+                        <span class="font-bold" x-text="formatPrice(cart.reduce((sum, item) => sum + (item.price * item.quantity), 0))"></span>
                     </div>
-                    <button @click="checkout()" 
-                            :disabled="cart.length === 0"
-                            class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold disabled:bg-gray-300">
+                    <button @click="checkout()" :disabled="cart.length === 0"
+                            class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-300">
                         اتمام الشراء
                     </button>
                 </div>
@@ -261,200 +285,411 @@
         </div>
     </div>
 
-    <!-- المحتوى الرئيسي - كما هو -->
+    <!-- Main Content -->
     <main class="container mx-auto px-4 py-6">
-        <!-- الفئات -->
-        <div class="mb-8">
-            <h2 class="text-xl font-bold mb-4">فئات المنتجات</h2>
-            <div class="flex overflow-x-auto space-x-3 space-x-reverse pb-2">
-                <button @click="selectCategory(null)" 
-                        :class="{'bg-blue-500 text-white': selectedCategory === null}"
-                        class="px-4 py-2 bg-gray-200 rounded-lg whitespace-nowrap">
+        <!-- Categories -->
+        <section class="mb-8">
+            <h2 class="text-lg font-bold mb-4">فئات المنتجات</h2>
+            <div class="flex gap-3 overflow-x-auto pb-3">
+                <button @click="selectedCategory = null" 
+                        :class="{'active': selectedCategory === null}"
+                        class="category-btn px-4 py-2 bg-gray-200 rounded-lg whitespace-nowrap">
                     الكل
                 </button>
                 <template x-for="category in categories" :key="category.id">
-                    <button @click="selectCategory(category.id)" 
-                            :class="{'bg-blue-500 text-white': selectedCategory === category.id}"
-                            class="px-4 py-2 bg-gray-200 rounded-lg whitespace-nowrap">
+                    <button @click="selectedCategory = category.id" 
+                            :class="{'active': selectedCategory === category.id}"
+                            class="category-btn px-4 py-2 bg-gray-200 rounded-lg whitespace-nowrap">
                         <span x-text="category.name"></span>
-                        <span class="mr-2 text-xs bg-gray-300 px-2 py-1 rounded" 
-                              x-text="categoryCount(category.id)"></span>
+                        <span class="mr-2 text-xs bg-white px-2 py-1 rounded" x-text="countProductsInCategory(category.id)"></span>
                     </button>
                 </template>
             </div>
-        </div>
+        </section>
 
-        <!-- المنتجات -->
-        <div>
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold">المنتجات</h2>
-                <div class="text-gray-600" x-text="`${filteredProducts.length} منتج`"></div>
+        <!-- Products Grid -->
+        <section>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold">المنتجات المتاحة</h2>
+                <span class="text-gray-600" x-text="`${filteredProducts.length} منتج`"></span>
             </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <template x-for="product in filteredProducts" :key="product.id">
-                    <div class="product-card bg-white rounded-lg shadow overflow-hidden">
+                    <div class="product-card bg-white rounded-xl overflow-hidden">
                         <div class="relative">
-                            <img :src="product.image" :alt="product.name" 
-                                 class="w-full h-48 object-cover">
-                            <div class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                                <span x-text="product.discount || '0'"></span>% خصم
+                            <img :src="product.image" :alt="product.name" class="w-full h-48 object-cover">
+                            <div x-show="product.discount > 0" class="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                                خصم <span x-text="product.discount"></span>%
                             </div>
                         </div>
-                        
                         <div class="p-4">
                             <h3 class="font-bold text-lg mb-2" x-text="product.name"></h3>
                             <p class="text-gray-600 text-sm mb-3" x-text="product.description"></p>
-                            
-                            <div class="flex justify-between items-center mb-3">
+                            <div class="flex justify-between items-center mb-4">
                                 <div>
-                                    <span class="text-xl font-bold text-blue-600" 
-                                          x-text="formatPrice(product.price)"></span>
-                                    <span x-show="product.oldPrice" 
-                                          class="text-gray-400 line-through text-sm mr-2"
-                                          x-text="formatPrice(product.oldPrice)"></span>
+                                    <span class="text-xl font-bold text-blue-600" x-text="formatPrice(calculatePrice(product))"></span>
+                                    <span x-show="product.oldPrice" class="text-gray-400 line-through text-sm mr-2" x-text="formatPrice(product.oldPrice)"></span>
                                 </div>
-                                <span class="text-sm text-gray-500">
+                                <div class="text-sm text-gray-500">
                                     <i class="fas fa-box ml-1"></i>
                                     <span x-text="product.stock"></span>
-                                </span>
+                                </div>
                             </div>
-                            
                             <button @click="addToCart(product)" 
                                     :disabled="product.stock === 0"
-                                    class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-semibold disabled:bg-gray-300">
+                                    :class="{'bg-gray-300 cursor-not-allowed': product.stock === 0, 'bg-blue-500 hover:bg-blue-600': product.stock > 0}"
+                                    class="w-full text-white py-2 rounded-lg font-semibold transition">
                                 <span x-text="product.stock === 0 ? 'نفذت الكمية' : 'أضف إلى السلة'"></span>
                             </button>
                         </div>
                     </div>
                 </template>
             </div>
-            
             <div x-show="filteredProducts.length === 0" class="text-center py-12">
-                <i class="fas fa-box-open text-5xl text-gray-300 mb-4"></i>
-                <p class="text-gray-500">لا توجد منتجات في هذه الفئة</p>
+                <i class="fas fa-box-open text-4xl text-gray-300 mb-3"></i>
+                <p class="text-gray-500">لا توجد منتجات متاحة</p>
             </div>
-        </div>
+        </section>
     </main>
 
-    <!-- الفوتر - كما هو -->
-    <footer class="bg-gray-800 text-white py-8 mt-12">
-        <div class="container mx-auto px-4">
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-8">
+        <div class="container mx-auto px-4 py-6">
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <h2 class="text-2xl font-bold" x-text="settings.storeName || 'المتجر الذكي'"></h2>
-                    <p class="text-gray-400 mt-2" x-text="settings.storeDescription || 'أفضل متجر للتسوق الإلكتروني'"></p>
+                <div class="mb-4 md:mb-0">
+                    <h2 class="text-lg font-bold" x-text="settings.storeName || 'المتجر الذكي'"></h2>
+                    <p class="text-gray-300 text-sm mt-1" x-text="settings.storeDescription || ''"></p>
                 </div>
-                
-                <div class="flex space-x-6 space-x-reverse">
-                    <a href="#" class="text-gray-400 hover:text-white">
-                        <i class="fab fa-facebook text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white">
-                        <i class="fab fa-twitter text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white">
-                        <i class="fab fa-instagram text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white">
-                        <i class="fab fa-whatsapp text-xl"></i>
-                    </a>
+                <div class="flex space-x-4 space-x-reverse">
+                    <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
-            
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>جميع الحقوق محفوظة © <span x-text="new Date().getFullYear()"></span> - <span x-text="settings.storeName || 'المتجر الذكي'"></span></p>
-                <p class="mt-2" x-text="settings.storeAddress || ''"></p>
-                <p x-text="settings.storePhone || ''"></p>
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                <p>© <span x-text="new Date().getFullYear()"></span> <span x-text="settings.storeName || 'المتجر الذكي'"></span> - جميع الحقوق محفوظة</p>
             </div>
         </div>
     </footer>
 
-    <!-- ⚡ زر الإعدادات المتقدمة - الإضافة الوحيدة -->
-    <div x-data="{ toolsOpen: false }">
-        <!-- زر الفتح -->
-        <div class="admin-tools-btn" @click="toolsOpen = !toolsOpen" title="أدوات المطور">
+    <!-- Quick Admin Tools -->
+    <div class="quick-tools" x-data="{ toolsOpen: false }">
+        <div class="quick-tools-btn" @click="toolsOpen = !toolsOpen">
             ⚙️
         </div>
-        
-        <!-- لوحة الأدوات -->
-        <div class="admin-tools-panel" :class="{ 'show': toolsOpen }" @click.away="toolsOpen = false">
-            <div class="tools-header">
-                <i class="fas fa-tools ml-2"></i>
-                أدوات المطور
+        <div class="tools-panel" :class="{ 'show': toolsOpen }" @click.away="toolsOpen = false">
+            <div class="tool-item warning" @click="localStorage.setItem('forceReload', 'true'); alert('سيتم التحديث من السيرفر'); location.reload();">
+                <i class="fas fa-sync-alt"></i>
+                <span>تحديث من السيرفر</span>
             </div>
-            
-            <div class="py-2">
-                <!-- مسح البيانات -->
-                <div class="tool-item danger" 
-                     @click="if(confirm('⚠️ هل أنت متأكد من مسح جميع البيانات المحلية؟')) { localStorage.clear(); alert('✅ تم مسح جميع البيانات'); location.reload(); }">
-                    <span>🗑️ مسح جميع البيانات المحلية</span>
-                    <i class="fas fa-trash"></i>
-                </div>
-                
-                <!-- إعادة تعيين المنتجات -->
-                <div class="tool-item warning" 
-                     @click="if(confirm('هل تريد إعادة تعيين المنتجات والفئات؟')) { localStorage.removeItem('products'); localStorage.removeItem('categories'); alert('🔄 تم إعادة تعيين المنتجات'); location.reload(); }">
-                    <span>🔄 إعادة تعيين المنتجات</span>
-                    <i class="fas fa-boxes"></i>
-                </div>
-                
-                <!-- إعادة تعيين الإعدادات -->
-                <div class="tool-item info" 
-                     @click="if(confirm('هل تريد إعادة تعيين الإعدادات؟')) { localStorage.removeItem('settings'); alert('⚙️ تم إعادة تعيين الإعدادات'); location.reload(); }">
-                    <span>⚙️ إعادة تعيين الإعدادات</span>
-                    <i class="fas fa-cog"></i>
-                </div>
-                
-                <!-- تحميل من السيرفر -->
-                <div class="tool-item success" 
-                     @click="localStorage.setItem('forceReload', 'true'); alert('📥 سيتم تحميل البيانات من السيرفر عند إعادة التحميل'); location.reload();">
-                    <span>📥 تحميل من السيرفر</span>
-                    <i class="fas fa-download"></i>
-                </div>
-                
-                <!-- تصدير البيانات -->
-                <div class="tool-item" 
-                     @click="exportData()">
-                    <span>📤 تصدير البيانات</span>
-                    <i class="fas fa-file-export"></i>
-                </div>
+            <div class="tool-item" @click="localStorage.removeItem('categories'); localStorage.removeItem('products'); alert('تم مسح المنتجات'); location.reload();">
+                <i class="fas fa-trash"></i>
+                <span>مسح المنتجات</span>
             </div>
-            
-            <div class="tool-note">
-                <p><strong>💡 ملاحظة مهمة:</strong></p>
-                <p>هذه الأدوات تمسح البيانات من <strong>متصفحك فقط</strong>.</p>
-                <p>لرؤية التغييرات الجديدة استخدم زر <strong>"تحميل من السيرفر"</strong>.</p>
+            <div class="tool-item" @click="localStorage.removeItem('settings'); alert('تم مسح الإعدادات'); location.reload();">
+                <i class="fas fa-cog"></i>
+                <span>مسح الإعدادات</span>
+            </div>
+            <div class="tool-item danger" @click="if(confirm('هل تريد مسح كل البيانات؟')) { localStorage.clear(); location.reload(); }">
+                <i class="fas fa-broom"></i>
+                <span>مسح الكل</span>
+            </div>
+            <div class="tool-info">
+                اضغط F5 بعد أي عملية
             </div>
         </div>
     </div>
 
     <!-- JavaScript -->
     <script src="assets/js/main.js"></script>
-    
     <script>
-        // دالة تصدير البيانات
-        function exportData() {
-            const data = {
-                categories: JSON.parse(localStorage.getItem('categories') || '[]'),
-                products: JSON.parse(localStorage.getItem('products') || '[]'),
-                settings: JSON.parse(localStorage.getItem('settings') || '{}'),
-                exportDate: new Date().toISOString(),
-                source: 'Smart Store Export'
+        // Store Application
+        function store() {
+            return {
+                // State
+                sidebarOpen: false,
+                cartOpen: false,
+                searchOpen: false,
+                selectedCategory: null,
+                searchQuery: '',
+                searchResults: [],
+                
+                // Data
+                categories: [],
+                products: [],
+                cart: [],
+                settings: {},
+                
+                // Initialize
+                async init() {
+                    console.log('Initializing store...');
+                    
+                    // Load data
+                    await this.loadData();
+                    
+                    // Load cart
+                    this.loadCart();
+                    
+                    // Load settings
+                    this.loadSettings();
+                },
+                
+                // Load data from server or localStorage
+                async loadData() {
+                    // Check if we should reload from server
+                    const forceReload = localStorage.getItem('forceReload') === 'true';
+                    
+                    if (forceReload || !localStorage.getItem('products')) {
+                        console.log('Loading from server...');
+                        await this.loadFromServer();
+                        localStorage.removeItem('forceReload');
+                    } else {
+                        console.log('Loading from localStorage...');
+                        this.loadFromLocalStorage();
+                    }
+                },
+                
+                // Load from server
+                async loadFromServer() {
+                    try {
+                        const response = await fetch('assets/js/db.json');
+                        const data = await response.json();
+                        
+                        this.categories = data.categories || [];
+                        this.products = data.products || [];
+                        
+                        // Save to localStorage
+                        localStorage.setItem('categories', JSON.stringify(this.categories));
+                        localStorage.setItem('products', JSON.stringify(this.products));
+                        
+                        console.log('Data loaded from server');
+                    } catch (error) {
+                        console.error('Error loading from server:', error);
+                        this.loadFromLocalStorage();
+                    }
+                },
+                
+                // Load from localStorage
+                loadFromLocalStorage() {
+                    const savedCategories = localStorage.getItem('categories');
+                    const savedProducts = localStorage.getItem('products');
+                    
+                    if (savedCategories) this.categories = JSON.parse(savedCategories);
+                    if (savedProducts) this.products = JSON.parse(savedProducts);
+                    
+                    // If no data, load sample data
+                    if (!savedCategories && !savedProducts) {
+                        this.loadSampleData();
+                    }
+                },
+                
+                // Load sample data
+                loadSampleData() {
+                    this.categories = [
+                        { id: 1, name: 'إلكترونيات' },
+                        { id: 2, name: 'ملابس' },
+                        { id: 3, name: 'أثاث' }
+                    ];
+                    
+                    this.products = [
+                        {
+                            id: 1,
+                            name: 'هاتف ذكي',
+                            description: 'أحدث هاتف ذكي',
+                            price: 1999,
+                            image: 'https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=هاتف+ذكي',
+                            categoryId: 1,
+                            stock: 10
+                        },
+                        {
+                            id: 2,
+                            name: 'كتاب برمجة',
+                            description: 'كتاب شامل للبرمجة',
+                            price: 99,
+                            image: 'https://via.placeholder.com/300x200/10B981/FFFFFF?text=كتاب',
+                            categoryId: 2,
+                            stock: 5
+                        }
+                    ];
+                    
+                    localStorage.setItem('categories', JSON.stringify(this.categories));
+                    localStorage.setItem('products', JSON.stringify(this.products));
+                },
+                
+                // Load cart
+                loadCart() {
+                    const savedCart = localStorage.getItem('cart');
+                    this.cart = savedCart ? JSON.parse(savedCart) : [];
+                },
+                
+                // Save cart
+                saveCart() {
+                    localStorage.setItem('cart', JSON.stringify(this.cart));
+                },
+                
+                // Load settings
+                loadSettings() {
+                    const savedSettings = localStorage.getItem('settings');
+                    if (savedSettings) {
+                        this.settings = JSON.parse(savedSettings);
+                    } else {
+                        this.settings = {
+                            storeName: 'المتجر الذكي',
+                            storeDescription: 'متجرك الإلكتروني المفضل'
+                        };
+                        localStorage.setItem('settings', JSON.stringify(this.settings));
+                    }
+                },
+                
+                // Filtered products
+                get filteredProducts() {
+                    if (this.selectedCategory === null) {
+                        return this.products;
+                    }
+                    return this.products.filter(p => p.categoryId === this.selectedCategory);
+                },
+                
+                // Count products in category
+                countProductsInCategory(categoryId) {
+                    return this.products.filter(p => p.categoryId === categoryId).length;
+                },
+                
+                // Calculate price with discount
+                calculatePrice(product) {
+                    if (product.discount > 0) {
+                        return product.price - (product.price * product.discount / 100);
+                    }
+                    return product.price;
+                },
+                
+                // Format price
+                formatPrice(price) {
+                    if (!price) return '0 ج.م';
+                    return price.toLocaleString('ar-EG') + ' ج.م';
+                },
+                
+                // Add to cart
+                addToCart(product) {
+                    if (product.stock === 0) {
+                        alert('هذا المنتج غير متوفر');
+                        return;
+                    }
+                    
+                    const existing = this.cart.find(item => item.id === product.id);
+                    
+                    if (existing) {
+                        existing.quantity++;
+                    } else {
+                        this.cart.push({
+                            id: product.id,
+                            name: product.name,
+                            price: this.calculatePrice(product),
+                            image: product.image,
+                            quantity: 1
+                        });
+                    }
+                    
+                    this.saveCart();
+                    
+                    // Show notification
+                    this.showNotification('تم إضافة المنتج إلى السلة');
+                },
+                
+                // Update cart item quantity
+                updateCart(productId, change) {
+                    const item = this.cart.find(item => item.id === productId);
+                    if (!item) return;
+                    
+                    const newQty = item.quantity + change;
+                    
+                    if (newQty < 1) {
+                        this.removeFromCart(productId);
+                        return;
+                    }
+                    
+                    item.quantity = newQty;
+                    this.saveCart();
+                },
+                
+                // Remove from cart
+                removeFromCart(productId) {
+                    this.cart = this.cart.filter(item => item.id !== productId);
+                    this.saveCart();
+                    this.showNotification('تم إزالة المنتج من السلة');
+                },
+                
+                // Search products
+                searchProducts() {
+                    if (!this.searchQuery.trim()) {
+                        this.searchResults = [];
+                        return;
+                    }
+                    
+                    const query = this.searchQuery.toLowerCase();
+                    this.searchResults = this.products.filter(product =>
+                        product.name.toLowerCase().includes(query) ||
+                        product.description.toLowerCase().includes(query)
+                    ).slice(0, 5);
+                },
+                
+                // Checkout
+                checkout() {
+                    if (this.cart.length === 0) {
+                        alert('السلة فارغة');
+                        return;
+                    }
+                    
+                    const total = this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    
+                    if (confirm(`المجموع: ${this.formatPrice(total)}\nهل تريد إتمام الشراء؟`)) {
+                        alert('شكراً لشرائك! تم استلام طلبك.');
+                        this.cart = [];
+                        this.saveCart();
+                        this.cartOpen = false;
+                    }
+                },
+                
+                // Show notification
+                showNotification(message) {
+                    // Create notification element
+                    const notification = document.createElement('div');
+                    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                    notification.textContent = message;
+                    notification.style.cssText = `
+                        animation: slideIn 0.3s ease, fadeOut 0.3s ease 2s forwards;
+                    `;
+                    
+                    // Add to page
+                    document.body.appendChild(notification);
+                    
+                    // Remove after 2.5 seconds
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 2500);
+                }
             };
-            
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `smart-store-backup-${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            alert('✅ تم تصدير البيانات بنجاح');
         }
+        
+        // Initialize when Alpine is ready
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('store', store);
+        });
+        
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
