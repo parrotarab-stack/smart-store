@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منتجات الفئة - المتجر الذكي</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- الهيدر -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-store"></i>
+                    <span>المتجر الذكي</span>
+                </div>
+                
+                <nav class="nav">
+                    <a href="index.html">الرئيسية</a>
+                    <a href="#categories">الفئات</a>
+                    <div class="cart-icon" onclick="openCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </div>
+                    <a href="admin/login.html" class="admin-link">
+                        <i class="fas fa-user-shield"></i> لوحة التحكم
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- محتوى الفئة -->
+    <main class="container">
+        <div id="category-header" style="margin: 30px 0;">
+            <!-- عنوان الفئة -->
+        </div>
+        
+        <!-- فلترة المنتجات -->
+        <div class="filter-bar">
+            <select id="sort-by" class="filter-select" onchange="filterProducts()">
+                <option value="">ترتيب حسب</option>
+                <option value="price-low">السعر: من الأقل للأعلى</option>
+                <option value="price-high">السعر: من الأعلى للأقل</option>
+                <option value="name">الاسم: أ-ي</option>
+                <option value="newest">الأحدث</option>
+                <option value="stock">المخزون: الأكثر أولاً</option>
+            </select>
+            
+            <select id="stock-filter" class="filter-select" onchange="filterProducts()">
+                <option value="">جميع المنتجات</option>
+                <option value="in-stock">المتوفرة فقط</option>
+                <option value="out-of-stock">غير متوفرة</option>
+            </select>
+            
+            <div style="margin-right: auto; display: flex; align-items: center; gap: 10px;">
+                <span id="product-count">0 منتج</span>
+            </div>
+        </div>
+        
+        <!-- منتجات الفئة -->
+        <div id="category-products" class="products-grid">
+            <!-- منتجات الفئة تظهر هنا -->
+        </div>
+    </main>
+
+    <!-- الفوتر -->
+    <footer class="footer">
+        <div class="container">
+            <!-- نفس الفوتر -->
+        </div>
+    </footer>
+
+    <script src="js/database.js"></script>
+    <script src="js/frontend.js"></script>
+    <script>
+    // جلب معرف الفئة من الرابط
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryId = urlParams.get('id');
+    
+    let allCategoryProducts = [];
+    
+    // تحميل منتجات الفئة
+    if (categoryId) {
+        loadCategoryProducts(categoryId);
+    } else {
+        window.location.href = 'index.html';
+    }
+    
+    function loadCategoryProducts(categoryId) {
+        const result = FrontendStore.loadCategoryProducts(categoryId);
+        
+        if (result.category) {
+            // تحديث العنوان
+            document.title = `${result.category.name} - المتجر الذكي`;
+            
+            // تحديث عنوان الفئة
+            document.getElementById('category-header').innerHTML = `
+                <h1 style="font-size: 28px; color: #2c3e50; margin-bottom: 10px;">
+                    <i class="fas ${result.category.icon || 'fa-folder'}"></i>
+                    ${result.category.name}
+                </h1>
+                <p style="color: #666;">${result.products.length} منتج</p>
+            `;
+            
+            // حفظ جميع المنتجات للفلترة
+            allCategoryProducts = result.products;
+            
+            // عرض المنتجات
+            displayProducts(allCategoryProducts);
+        } else {
+            // الفئة غير موجودة
+            document.getElementById('category-products').innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+                    <i class="fas fa-exclamation-circle" style="font-size: 60px; color: #f39c12; margin-bottom: 20px;"></i>
+                    <h2 style="color: #f39c12;">الفئة غير موجودة</h2>
+                    <p style="margin: 20px 0 30px;">عذراً، الفئة التي تبحث عنها غير موجودة.</p>
+                    <a href="index.html" class="btn btn-primary">العودة للرئيسية</a>
+                </div>
+            `;
+        }
+    }
+    
+    function displayProducts(products) {
+        const categories = SmartStoreDB.get('categories');
+        document.getElementById('category-products').innerHTML = 
+            FrontendStore.displayProducts(products, categories);
+        
+        // تحديث عدد المنتجات
+        document.getElementById('product-count').textContent = 
+            `${products.length} منتج${products.length !== 1 ? 'ات' : ''}`;
+    }
+    
+    function filterProducts() {
+        let filtered = [...allCategoryProducts];
+        const sortBy = document.getElementById('sort-by').value;
+        const stockFilter = document.getElementById('stock-filter').value;
+        
+        // فلترة حسب المخزون
+        if (stockFilter === 'in-stock') {
+            filtered = filtered.filter(p => p.stock > 0);
+        } else if (stockFilter === 'out-of-stock') {
+            filtered = filtered.filter(p => p.stock <= 0);
+        }
+        
+        // الترتيب
+        if (sortBy === 'price-low') {
+            filtered.sort((a, b) => a.price - b.price);
+        } else if (sortBy === 'price-high') {
+            filtered.sort((a, b) => b.price - a.price);
+        } else if (sortBy === 'name') {
+            filtered.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+        } else if (sortBy === 'newest') {
+            filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        } else if (sortBy === 'stock') {
+            filtered.sort((a, b) => b.stock - a.stock);
+        }
+        
+        displayProducts(filtered);
+    }
+    
+    // إدارة السلة
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    
+    function updateCartCount() {
+        const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+        document.getElementById('cart-count').textContent = total;
+        document.getElementById('cart-count').style.display = total > 0 ? 'flex' : 'none';
+    }
+    
+    function addToCart(productId) {
+        const products = SmartStoreDB.get('products');
+        const product = products.find(p => p.id == productId);
+        
+        if (!product) return StoreUtils.showAlert('المنتج غير موجود', 'error');
+        if (product.stock <= 0) return StoreUtils.showAlert('المنتج نفذ من المخزون', 'error');
+        
+        const existingItem = cart.find(item => item.id == productId);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                quantity: 1
+            });
+        }
+        
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        StoreUtils.showAlert(`تم إضافة ${product.name} إلى السلة`, 'success');
+    }
+    
+    // تهيئة الصفحة
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCartCount();
+    });
+    </script>
+</body>
+</html>

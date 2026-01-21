@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل المنتج - المتجر الذكي</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-store"></i>
+                    <span>المتجر الذكي</span>
+                </a>
+                <nav class="main-nav">
+                    <a href="index.html#categories" class="nav-link">الفئات</a>
+                    <a href="index.html#products" class="nav-link">المنتجات</a>
+                    <div class="cart-icon" onclick="openCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mt-4">
+        <div class="product-details">
+            <div class="product-gallery">
+                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&h=400&fit=crop" 
+                     alt="هاتف سامسونج جالكسي" id="product-image">
+            </div>
+            
+            <div class="product-content">
+                <div class="product-header">
+                    <div class="product-category">إلكترونيات</div>
+                    <h1 id="product-name">هاتف سامسونج جالكسي</h1>
+                    <div class="product-price-large" id="product-price">5,000 ج.م</div>
+                    <div class="product-stock stock-in mt-2" id="product-stock">
+                        <i class="fas fa-check"></i> متوفر (10)
+                    </div>
+                </div>
+                
+                <div class="product-specs">
+                    <h3>المواصفات</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><i class="fas fa-check text-success"></i> شاشة 6.5 بوصة</li>
+                        <li><i class="fas fa-check text-success"></i> كاميرا 48 ميجابكسل</li>
+                        <li><i class="fas fa-check text-success"></i> ذاكرة 128 جيجابايت</li>
+                        <li><i class="fas fa-check text-success"></i> بطارية 4000 مللي أمبير</li>
+                    </ul>
+                </div>
+                
+                <p id="product-description">
+                    هاتف ذكي حديث بشاشة كبيرة وواضحة، كاميرا عالية الدقة، أداء سريع، 
+                    وبطارية تدوم طويلاً. مثالي للاستخدام اليومي والألعاب.
+                </p>
+                
+                <div class="mt-4">
+                    <button class="btn btn-primary btn-block" onclick="addToCart()">
+                        <i class="fas fa-cart-plus"></i> أضف إلى سلة التسوق
+                    </button>
+                    <button class="btn btn-secondary btn-block mt-2" onclick="window.history.back()">
+                        <i class="fas fa-arrow-right"></i> رجوع
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer mt-4">
+        <div class="container">
+            <!-- نفس الفوتر -->
+        </div>
+    </footer>
+
+    <script src="js/cart.js"></script>
+    <script>
+    // تحميل تفاصيل المنتج
+    function loadProductDetails() {
+        // في التطبيق الحقيقي، يتم جلب البيانات من قاعدة البيانات
+        const product = {
+            id: 1,
+            name: 'هاتف سامسونج جالكسي',
+            price: 5000,
+            stock: 10,
+            description: 'هاتف ذكي حديث بشاشة كبيرة وواضحة، كاميرا عالية الدقة، أداء سريع، وبطارية تدوم طويلاً.'
+        };
+        
+        document.getElementById('product-name').textContent = product.name;
+        document.getElementById('product-price').textContent = product.price.toLocaleString() + ' ج.م';
+        document.getElementById('product-description').textContent = product.description;
+        
+        const stockElement = document.getElementById('product-stock');
+        stockElement.innerHTML = `
+            <i class="fas fa-${product.stock > 0 ? 'check' : 'times'}"></i>
+            ${product.stock > 0 ? `متوفر (${product.stock})` : 'نفذ من المخزون'}
+        `;
+        stockElement.className = `product-stock ${product.stock > 0 ? 'stock-in' : 'stock-out'} mt-2`;
+    }
+    
+    function addToCart() {
+        Cart.addToCart(1); // إضافة المنتج الحالي للسلة
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        loadProductDetails();
+        Cart.init();
+    });
+    </script>
+</body>
+</html>

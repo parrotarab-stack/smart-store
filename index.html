@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المتجر الذكي - أفضل المنتجات بأفضل الأسعار</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- الهيدر -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-store"></i>
+                    <span>المتجر الذكي</span>
+                </a>
+                
+                <nav class="main-nav">
+                    <a href="#categories" class="nav-link">الفئات</a>
+                    <a href="#products" class="nav-link">المنتجات</a>
+                    <a href="#features" class="nav-link">مميزاتنا</a>
+                    <div class="cart-icon" onclick="openCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </div>
+                    <a href="admin/login.html" class="btn btn-primary btn-small">
+                        <i class="fas fa-user-shield"></i> لوحة التحكم
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- الهيرو -->
+    <section class="hero">
+        <div class="container">
+            <h1>مرحباً بك في المتجر الذكي</h1>
+            <p>اكتشف أفضل المنتجات بأفضل الأسعار. توصيل مجاني داخل السنبلاوين. جودة مضمونة وخدمة عملاء على مدار الساعة.</p>
+            <a href="#products" class="btn btn-primary">
+                <i class="fas fa-shopping-bag"></i> تصفح المنتجات
+            </a>
+        </div>
+    </section>
+
+    <!-- الفئات -->
+    <section id="categories" class="categories-section">
+        <div class="container">
+            <h2 class="section-title">فئات المنتجات</h2>
+            <div class="categories-grid" id="categories-container">
+                <!-- الفئات تظهر هنا -->
+            </div>
+        </div>
+    </section>
+
+    <!-- المنتجات المميزة -->
+    <section id="products" class="products-section">
+        <div class="container">
+            <h2 class="section-title">المنتجات المميزة</h2>
+            
+            <!-- الفلاتر -->
+            <div class="filter-section">
+                <div class="filter-row">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="ابحث عن منتج..." id="search-input">
+                    </div>
+                    <select class="filter-select" id="category-filter">
+                        <option value="">جميع الفئات</option>
+                        <!-- الفئات تظهر هنا -->
+                    </select>
+                    <select class="filter-select" id="sort-filter">
+                        <option value="">ترتيب حسب</option>
+                        <option value="price-low">السعر: من الأقل للأعلى</option>
+                        <option value="price-high">السعر: من الأعلى للأقل</option>
+                        <option value="newest">الأحدث أولاً</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- المنتجات -->
+            <div class="products-grid" id="products-container">
+                <!-- المنتجات تظهر هنا -->
+            </div>
+        </div>
+    </section>
+
+    <!-- مميزاتنا -->
+    <section id="features" class="categories-section">
+        <div class="container">
+            <h2 class="section-title">لماذا تختارنا؟</h2>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3>توصيل سريع</h3>
+                    <p>توصيل خلال 24 ساعة داخل السنبلاوين</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>ضمان الجودة</h3>
+                    <p>جميع المنتجات أصلية وذات جودة عالية</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>دعم فني</h3>
+                    <p>فريق دعم متاح على مدار الساعة</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-undo"></i>
+                    </div>
+                    <h3>إرجاع سهل</h3>
+                    <p>سياسة إرجاع لمدة 14 يوم</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>المتجر الذكي</h3>
+                    <p>متجر إلكتروني يوفر أفضل المنتجات بأفضل الأسعار. توصيل مجاني داخل السنبلاوين.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="#categories">الفئات</a></li>
+                        <li><a href="#products">المنتجات</a></li>
+                        <li><a href="admin/login.html">لوحة التحكم</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <p><i class="fas fa-phone"></i> 01000621448</p>
+                    <p><i class="fas fa-envelope"></i> ilperata@msn.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> الدقهلية - مصر</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2024 المتجر الذكي. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- مودال السلة -->
+    <div class="modal" id="cart-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">سلة التسوق</h3>
+                <button class="close-modal" onclick="closeCart()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="cart-items" id="cart-items">
+                    <!-- عناصر السلة -->
+                </div>
+                <div class="cart-total">
+                    <span>الإجمالي:</span>
+                    <span id="cart-total-price">0 ج.م</span>
+                </div>
+                <button class="btn btn-primary btn-block mt-3" onclick="checkout()">
+                    <i class="fas fa-check"></i> إتمام الشراء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال الشراء -->
+    <div class="modal" id="checkout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">إتمام الطلب</h3>
+                <button class="close-modal" onclick="closeCheckout()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="checkout-form" onsubmit="placeOrder(event)">
+                    <div class="form-group">
+                        <label class="form-label">الاسم الكامل *</label>
+                        <input type="text" class="form-control" id="customer-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">رقم الهاتف *</label>
+                        <input type="tel" class="form-control" id="customer-phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">العنوان التفصيلي *</label>
+                        <textarea class="form-control" id="customer-address" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">ملاحظات (اختياري)</label>
+                        <textarea class="form-control" id="order-notes" rows="2"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-paper-plane"></i> تأكيد الطلب
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- التنبيهات -->
+    <div id="alert-container" style="position: fixed; top: 20px; right: 20px; z-index: 1002; width: 300px;"></div>
+
+    <!-- الروابط -->
+    <script src="js/app.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/products.js"></script>
+</body>
+</html>
