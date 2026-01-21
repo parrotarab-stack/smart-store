@@ -3,23 +3,68 @@
     {
       "id": 1,
       "name": "إلكترونيات",
-      "icon": "fas fa-laptop"
+      "icon": "fas fa-laptop",
+      "description": "أجهزة إلكترونية حديثة"
     },
     {
       "id": 2,
       "name": "ملابس",
-      "icon": "fas fa-tshirt"
+      "icon": "fas fa-tshirt",
+      "description": "ملابس بأحدث الموديلات"
+    },
+    {
+      "id": 3,
+      "name": "أثاث",
+      "icon": "fas fa-couch",
+      "description": "أثاث منزلي ومكتبي"
+    },
+    {
+      "id": 4,
+      "name": "كتب",
+      "icon": "fas fa-book",
+      "description": "كتب متنوعة في جميع المجالات"
     }
   ],
   "products": [
     {
       "id": 1,
-      "name": "منتج تجريبي 1",
-      "description": "وصف المنتج التجريبي",
-      "price": 100,
-      "image": "https://via.placeholder.com/300x200",
+      "name": "هاتف سامسونج جالاكسي",
+      "description": "أحدث هاتف ذكي بكاميرا 108 ميجابكسل",
+      "price": 3500,
+      "oldPrice": 4000,
+      "discount": 12,
+      "image": "https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=سامسونج+جالاكسي",
       "categoryId": 1,
-      "stock": 10
+      "stock": 8
+    },
+    {
+      "id": 2,
+      "name": "تيشيرت قطني",
+      "description": "تيشيرت صيفي مريح وقطني 100%",
+      "price": 75,
+      "oldPrice": 120,
+      "discount": 37,
+      "image": "https://via.placeholder.com/300x200/10B981/FFFFFF?text=تيشيرت+قطني",
+      "categoryId": 2,
+      "stock": 20
+    },
+    {
+      "id": 3,
+      "name": "كتاب تطوير الويب",
+      "description": "كتاب شامل لتعلم تطوير المواقع",
+      "price": 150,
+      "image": "https://via.placeholder.com/300x200/F59E0B/FFFFFF?text=كتاب+تطوير+الويب",
+      "categoryId": 4,
+      "stock": 15
+    },
+    {
+      "id": 4,
+      "name": "كنبة ثلاثية",
+      "description": "كنبة فخمة ومريحة للصالة",
+      "price": 3200,
+      "image": "https://via.placeholder.com/300x200/8B5CF6/FFFFFF?text=كنبة+ثلاثية",
+      "categoryId": 3,
+      "stock": 3
     }
   ]
 }
